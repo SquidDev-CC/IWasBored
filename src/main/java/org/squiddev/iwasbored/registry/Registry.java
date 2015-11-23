@@ -1,9 +1,7 @@
-package org.squiddev.iwasbored;
+package org.squiddev.iwasbored.registry;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import org.squiddev.cctweaks.core.registry.IClientModule;
-import org.squiddev.cctweaks.core.registry.IModule;
 import org.squiddev.iwasbored.client.render.RenderModelInterface;
 import org.squiddev.iwasbored.items.ItemNeuralConnector;
 import org.squiddev.iwasbored.items.ItemNeuralInterface;

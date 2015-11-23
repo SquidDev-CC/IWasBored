@@ -14,11 +14,11 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.common.util.EnumHelper;
-import org.squiddev.cctweaks.core.registry.IModule;
 import org.squiddev.iwasbored.IWasBored;
 import org.squiddev.iwasbored.client.model.ModelInterface;
 import org.squiddev.iwasbored.neural.NeuralInterface;
 import org.squiddev.iwasbored.neural.NeuralManager;
+import org.squiddev.iwasbored.registry.IModule;
 
 public class ItemNeuralInterface extends ItemArmor implements IBauble, ISpecialArmor, IModule {
 	private static final ArmorMaterial FAKE_ARMOUR = EnumHelper.addArmorMaterial("FAKE_ARMOUR", 33, new int[]{0, 0, 0, 0}, 0);

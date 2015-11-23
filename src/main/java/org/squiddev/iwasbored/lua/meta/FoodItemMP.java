@@ -8,10 +8,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import org.squiddev.cctweaks.core.registry.Module;
 import org.squiddev.iwasbored.api.IWasBoredAPI;
 import org.squiddev.iwasbored.api.meta.IItemMetaProvider;
 import org.squiddev.iwasbored.api.meta.ItemReference;
+import org.squiddev.iwasbored.registry.Module;
 
 import java.util.HashMap;
 import java.util.List;

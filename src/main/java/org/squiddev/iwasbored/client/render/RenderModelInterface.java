@@ -11,10 +11,10 @@ import net.minecraft.potion.Potion;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.opengl.GL11;
-import org.squiddev.cctweaks.core.registry.IClientModule;
-import org.squiddev.cctweaks.core.registry.Module;
-import org.squiddev.iwasbored.Registry;
 import org.squiddev.iwasbored.client.model.ModelInterface;
+import org.squiddev.iwasbored.registry.IClientModule;
+import org.squiddev.iwasbored.registry.Module;
+import org.squiddev.iwasbored.registry.Registry;
 
 public class RenderModelInterface extends Module implements IClientModule {
 

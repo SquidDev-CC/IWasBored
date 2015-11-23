@@ -9,6 +9,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import dan200.computercraft.ComputerCraft;
 import net.minecraft.creativetab.CreativeTabs;
 import org.squiddev.iwasbored.neural.NeuralManager;
+import org.squiddev.iwasbored.registry.Registry;
 
 @Mod(modid = IWasBored.ID, name = IWasBored.NAME, version = IWasBored.VERSION, dependencies = IWasBored.DEPENDENCIES)
 public class IWasBored {

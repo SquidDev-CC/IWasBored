@@ -4,10 +4,10 @@ import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.ILuaObject;
 import dan200.computercraft.api.lua.LuaException;
 import net.minecraft.item.ItemStack;
-import org.squiddev.cctweaks.core.registry.Module;
 import org.squiddev.iwasbored.api.IWasBoredAPI;
 import org.squiddev.iwasbored.api.meta.IItemMetaProvider;
 import org.squiddev.iwasbored.api.meta.ItemReference;
+import org.squiddev.iwasbored.registry.Module;
 
 import java.util.Map;
 

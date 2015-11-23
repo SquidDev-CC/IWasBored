@@ -7,12 +7,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import org.squiddev.cctweaks.core.registry.IModule;
 import org.squiddev.iwasbored.GuiHandler;
 import org.squiddev.iwasbored.IWasBored;
-import org.squiddev.iwasbored.Registry;
-import org.squiddev.iwasbored.neural.NeuralManager;
 import org.squiddev.iwasbored.inventory.ArmorItem;
+import org.squiddev.iwasbored.neural.NeuralManager;
+import org.squiddev.iwasbored.registry.IModule;
+import org.squiddev.iwasbored.registry.Registry;
 
 
 public class ItemNeuralConnector extends Item implements IModule {
