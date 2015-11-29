@@ -71,6 +71,11 @@ public class FoodItemMP extends Module implements IItemMetaProvider {
 		return null;
 	}
 
+	@Override
+	public int getPriority() {
+		return 0;
+	}
+
 	public static class ConsumableMeta implements ILuaObject {
 		private final ItemReference reference;
 

@@ -103,7 +103,12 @@ public class API implements IIWasBoredAPI {
 	}
 
 	private static class MetaRegistry implements IMetaRegistry {
-		private final Set<IItemMetaProvider> providers = new HashSet<IItemMetaProvider>();
+		private final PriorityQueue<IItemMetaProvider> providers = new PriorityQueue<IItemMetaProvider>(16, new Comparator<IItemMetaProvider>() {
+			@Override
+			public int compare(IItemMetaProvider a, IItemMetaProvider b) {
+				return b.getPriority() - a.getPriority();
+			}
+		});
 
 		@Override
 		public void registerItemProvider(IItemMetaProvider provider) {
@@ -126,14 +131,14 @@ public class API implements IIWasBoredAPI {
 
 		@Override
 		public Iterable<ILuaObject> getItemMethods(ItemReference stack) {
+			Preconditions.checkNotNull(stack, "stack cannot be null");
+
 			List<ILuaObject> objects = new ArrayList<ILuaObject>();
 
-			DebugLogger.debug("Loading with " + providers);
 			for (IItemMetaProvider provider : providers) {
 				ILuaObject object = provider.getObject(stack);
 				if (object != null) objects.add(object);
 			}
-			DebugLogger.debug("Got " + objects);
 
 			return objects;
 		}

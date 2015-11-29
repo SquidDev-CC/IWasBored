@@ -24,4 +24,11 @@ public interface IItemMetaProvider {
 	 * @return The object
 	 */
 	ILuaObject getObject(ItemReference stack);
+
+	/**
+	 * Get the priority of this provider.
+	 *
+	 * @return This provider's priority. The larger the number the higher the priority.
+	 */
+	int getPriority();
 }

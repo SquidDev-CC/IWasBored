@@ -16,43 +16,11 @@ buildscript {
 }
 
 apply plugin: 'forge'
+apply from: 'gradle/scripts/dependencies.gradle'
 
 group = "org.squiddev"
 archivesBaseName = "IWasBored"
 version = mc_version + "-" + mod_version
-
-repositories {
-	mavenCentral()
-
-	maven {
-		name = "chickenbones"
-		url = "http://chickenbones.net/maven"
-	}
-
-	maven {
-		name = "squiddev"
-		url = "http://maven.bonzodandd.co.uk"
-	}
-
-	maven {
-		name = "RX14 Proxy"
-		url = "http://mvn.rx14.co.uk/repo/"
-	}
-
-	ivy {
-		name = "ComputerCraft"
-		artifactPattern "http://addons-origin.cursecdn.com/files/2244/605/[module][revision].[ext]"
-	}
-}
-
-dependencies {
-	compile "codechicken:CodeChickenCore:${project.mc_version}-1.0.4.29:dev"
-	compile "codechicken:CodeChickenLib:${project.mc_version}-1.1.3.127:dev"
-
-	compile group: 'ComputerCraft', name: 'ComputerCraft', version: "1.74", ext: 'jar'
-	compile "org.squiddev:CCTweaks:${project.mc_version}-0.2.3.2:dev"
-	compile "com.azanor.baubles:Baubles:${project.mc_version}-1.0.1.10:deobf"
-}
 
 minecraft {
 	version = project.mc_version + "-" + project.forge_version

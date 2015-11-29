@@ -21,6 +21,11 @@ public class BasicItemMP extends Module implements IItemMetaProvider {
 		return new BasicObject(stack);
 	}
 
+	@Override
+	public int getPriority() {
+		return 0;
+	}
+
 	private static final class BasicObject implements ILuaObject {
 		private final ItemReference item;
 

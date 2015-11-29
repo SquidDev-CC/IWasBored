@@ -3,6 +3,7 @@ package org.squiddev.iwasbored.registry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import org.squiddev.iwasbored.client.render.RenderModelInterface;
+import org.squiddev.iwasbored.integration.openperipheral.OpenPeripheralIntegration;
 import org.squiddev.iwasbored.items.ItemNeuralConnector;
 import org.squiddev.iwasbored.items.ItemNeuralInterface;
 import org.squiddev.iwasbored.lua.meta.BasicItemMP;
@@ -32,6 +33,8 @@ public final class Registry {
 
 		addModule(new BasicItemMP());
 		addModule(new FoodItemMP());
+
+		addModule(new OpenPeripheralIntegration());
 	}
 
 	public static void addModule(IModule module) {
