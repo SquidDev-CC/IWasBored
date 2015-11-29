@@ -1,3 +1,6 @@
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+
 repositories {
 	mavenCentral()
 
@@ -39,5 +42,10 @@ dependencies {
 	compile "org.squiddev:CCTweaks:${project.mc_version}-0.2.3.2:dev"
 	compile "com.azanor.baubles:Baubles:${project.mc_version}-1.0.1.10:deobf"
 
-	compile "openperipheral:OpenPeripheralCore-API:3.2"
+	packaged "openperipheral:OpenPeripheralCore-API:3.3"
 }
+
+sourceSets.main.compileClasspath += [configurations.packaged]
+
+idea.module.scopes.PROVIDED.plus += [configurations.packaged]
+eclipse.classpath.plusConfigurations += [configurations.packaged]
