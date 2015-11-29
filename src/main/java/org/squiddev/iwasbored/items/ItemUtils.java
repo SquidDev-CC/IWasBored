@@ -3,6 +3,7 @@ package org.squiddev.iwasbored.items;
 import baubles.api.IBauble;
 import baubles.common.container.InventoryBaubles;
 import baubles.common.lib.PlayerHandler;
+import cpw.mods.fml.common.Optional;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,6 +23,7 @@ public class ItemUtils {
 	private static final String TAG_BAUBLE_UUID_MOST = "baubleUUIDMost";
 	private static final String TAG_BAUBLE_UUID_LEAST = "baubleUUIDLeast";
 
+	@Optional.Method(modid = "Baubles")
 	public static ItemStack replaceBauble(IBauble bauble, ItemStack stack, World world, EntityPlayer player) {
 		if (player instanceof FakePlayer || !bauble.canEquip(stack, player)) return stack;
 

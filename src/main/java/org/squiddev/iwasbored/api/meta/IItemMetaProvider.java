@@ -2,6 +2,7 @@ package org.squiddev.iwasbored.api.meta;
 
 import dan200.computercraft.api.lua.ILuaObject;
 import net.minecraft.item.ItemStack;
+import org.squiddev.iwasbored.api.ItemReference;
 
 import java.util.Map;
 

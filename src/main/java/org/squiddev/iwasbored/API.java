@@ -2,26 +2,28 @@ package org.squiddev.iwasbored;
 
 import com.google.common.base.Preconditions;
 import dan200.computercraft.api.lua.ILuaObject;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import org.squiddev.iwasbored.api.IIWasBoredAPI;
+import org.squiddev.iwasbored.api.IProvider;
+import org.squiddev.iwasbored.api.ItemReference;
 import org.squiddev.iwasbored.api.meta.IItemMetaProvider;
 import org.squiddev.iwasbored.api.meta.IMetaRegistry;
-import org.squiddev.iwasbored.api.meta.ItemReference;
-import org.squiddev.iwasbored.api.neural.INeuralUpgrade;
-import org.squiddev.iwasbored.api.neural.INeuralUpgradeProvider;
-import org.squiddev.iwasbored.api.neural.INeuralUpgradeRegistry;
+import org.squiddev.iwasbored.api.neural.INeuralRegistry;
 import org.squiddev.iwasbored.inventory.InventoryUtils;
+import org.squiddev.iwasbored.neural.NeuralRegistry;
+import org.squiddev.iwasbored.utils.SortedCollection;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 
 public class API implements IIWasBoredAPI {
-	private final INeuralUpgradeRegistry neuralRegistry = new NeuralUpgrades();
+	private final INeuralRegistry neuralRegistry = new NeuralRegistry();
 	private final MetaRegistry metaRegistry = new MetaRegistry();
 
 	@Override
-	public INeuralUpgradeRegistry neuralRegistry() {
+	public INeuralRegistry neuralRegistry() {
 		return neuralRegistry;
 	}
 
@@ -30,80 +32,15 @@ public class API implements IIWasBoredAPI {
 		return metaRegistry;
 	}
 
-	private static class NeuralUpgrades implements INeuralUpgradeRegistry {
-		private List<INeuralUpgradeProvider> generics = new ArrayList<INeuralUpgradeProvider>();
-		private Map<String, INeuralUpgradeProvider> stringLookup = new HashMap<String, INeuralUpgradeProvider>();
-		private Map<Item, INeuralUpgradeProvider> itemLookup = new HashMap<Item, INeuralUpgradeProvider>();
-
+	public static final Comparator<IProvider> providerComparer = new Comparator<IProvider>() {
 		@Override
-		public void registerNeuralUpgrade(INeuralUpgradeProvider provider) {
-			Preconditions.checkNotNull(provider, "factory cannot be null");
-			generics.add(provider);
+		public int compare(IProvider a, IProvider b) {
+			return b.getPriority() - a.getPriority();
 		}
-
-		@Override
-		public void registerNeuralUpgrade(INeuralUpgradeProvider provider, String name, Item item) {
-			Preconditions.checkNotNull(provider, "factory cannot be null");
-			Preconditions.checkNotNull(name, "name cannot be null");
-			Preconditions.checkNotNull(item, "item cannot be null");
-
-			if (stringLookup.containsKey(name)) {
-				throw new IllegalArgumentException(name + " already exists, registered by " + stringLookup.get(name));
-			}
-
-			if (itemLookup.containsKey(item)) {
-				throw new IllegalArgumentException(item + " already exists, registered by " + itemLookup.get(item));
-			}
-
-			stringLookup.put(name, provider);
-			itemLookup.put(item, provider);
-		}
-
-		@Override
-		public INeuralUpgrade create(String name, NBTTagCompound tag) {
-			Preconditions.checkNotNull(name, "name cannot be null");
-			Preconditions.checkNotNull(tag, "tag cannot be null");
-
-
-			{
-				INeuralUpgradeProvider factory = stringLookup.get(name);
-				if (factory != null) {
-					INeuralUpgrade upgrade = factory.create(name, tag);
-					if (upgrade != null) return upgrade;
-				}
-			}
-
-			for (INeuralUpgradeProvider factory : generics) {
-				INeuralUpgrade upgrade = factory.create(name, tag);
-				if (upgrade != null) return upgrade;
-			}
-
-			return null;
-		}
-
-		@Override
-		public INeuralUpgrade create(ItemStack stack) {
-			Preconditions.checkNotNull(stack, "stack cannot be null");
-
-			{
-				INeuralUpgradeProvider factory = itemLookup.get(stack.getItem());
-				if (factory != null) {
-					INeuralUpgrade upgrade = factory.create(stack);
-					if (upgrade != null) return upgrade;
-				}
-			}
-
-			for (INeuralUpgradeProvider factory : generics) {
-				INeuralUpgrade upgrade = factory.create(stack);
-				if (upgrade != null) return upgrade;
-			}
-
-			return null;
-		}
-	}
+	};
 
 	private static class MetaRegistry implements IMetaRegistry {
-		private final PriorityQueue<IItemMetaProvider> providers = new PriorityQueue<IItemMetaProvider>(16, new Comparator<IItemMetaProvider>() {
+		private final SortedCollection<IItemMetaProvider> providers = new SortedCollection<IItemMetaProvider>(new Comparator<IItemMetaProvider>() {
 			@Override
 			public int compare(IItemMetaProvider a, IItemMetaProvider b) {
 				return b.getPriority() - a.getPriority();

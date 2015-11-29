@@ -7,8 +7,8 @@ import openperipheral.api.ApiAccess;
 import openperipheral.api.meta.IItemStackMetaBuilder;
 import org.squiddev.iwasbored.DebugLogger;
 import org.squiddev.iwasbored.api.IWasBoredAPI;
+import org.squiddev.iwasbored.api.ItemReference;
 import org.squiddev.iwasbored.api.meta.IItemMetaProvider;
-import org.squiddev.iwasbored.api.meta.ItemReference;
 import org.squiddev.iwasbored.integration.ModIntegration;
 
 import java.util.Map;
@@ -18,8 +18,8 @@ public class OpenPeripheralIntegration extends ModIntegration {
 		super("OpenPeripheral");
 	}
 
-	@Optional.Method(modid = "OpenPeripheral")
 	@Override
+	@Optional.Method(modid = "OpenPeripheral")
 	public void postInit() {
 		try {
 			if (ApiAccess.isApiPresent(IItemStackMetaBuilder.class)) {

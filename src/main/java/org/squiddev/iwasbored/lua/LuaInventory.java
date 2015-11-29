@@ -6,6 +6,7 @@ import dan200.computercraft.api.lua.LuaException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import org.squiddev.iwasbored.api.IWasBoredAPI;
 import org.squiddev.iwasbored.inventory.InventoryUtils;
 import org.squiddev.iwasbored.inventory.SingleItem;
 
@@ -57,7 +58,13 @@ public class LuaInventory implements ILuaObject {
 				if (slot < 1 || slot > size) throw new LuaException("Slot out of range");
 
 				SingleItem item = new SingleItem(inventory, slot - 1, player);
-				if (item.isValid()) return new Object[]{new LuaItem(item)};
+
+
+				if (item.isValid()) {
+					return new Object[]{
+						new LuaReference<ItemStack>(IWasBoredAPI.instance().metaRegistry().getItemMethods(item), item, "Item is no longer there")
+					};
+				}
 
 				return null;
 			}
@@ -65,11 +72,11 @@ public class LuaInventory implements ILuaObject {
 			case 2: // getSize
 				return new Object[]{size};
 			case 3: { // moveToSlot
-				// (fromSlot, targetSlot, [targetInventory], [targetCount])
+				// (fromSlot, targetSlot, [Count])
 				break;
 			}
-			case 4: { // moveTo
-				// (fromSlot, targetSlot, targetInventory, [targetCount])
+			case 4: { // moveToInventory
+				// (fromSlot, targetSlot, targetInventory, [Count])
 				break;
 			}
 		}

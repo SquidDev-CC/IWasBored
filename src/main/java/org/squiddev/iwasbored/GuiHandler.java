@@ -3,10 +3,10 @@ package org.squiddev.iwasbored;
 import cpw.mods.fml.common.network.IGuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+import org.squiddev.iwasbored.api.IWasBoredAPI;
+import org.squiddev.iwasbored.api.neural.INeuralReference;
 import org.squiddev.iwasbored.client.gui.GuiNeuralInterface;
-import org.squiddev.iwasbored.items.ItemNeuralConnector;
-import org.squiddev.iwasbored.inventory.ContainerArmorItem;
-import org.squiddev.iwasbored.inventory.ArmorItem;
+import org.squiddev.iwasbored.neural.NeuralContainer;
 
 public class GuiHandler implements IGuiHandler {
 	public static final int GUI_NEURAL = 101;
@@ -15,8 +15,8 @@ public class GuiHandler implements IGuiHandler {
 	public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
 		switch (id) {
 			case GUI_NEURAL: {
-				ArmorItem neuralInterface = ItemNeuralConnector.findNeuralInterface(player);
-				return neuralInterface == null ? null : new GuiNeuralInterface(new ContainerArmorItem(neuralInterface));
+				INeuralReference reference = IWasBoredAPI.instance().neuralRegistry().getNeuralInterface(player);
+				return reference == null ? null : new GuiNeuralInterface(reference);
 			}
 		}
 
@@ -27,8 +27,8 @@ public class GuiHandler implements IGuiHandler {
 	public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
 		switch (id) {
 			case GUI_NEURAL: {
-				ArmorItem neuralInterface = ItemNeuralConnector.findNeuralInterface(player);
-				return neuralInterface == null ? null : new ContainerArmorItem(neuralInterface);
+				INeuralReference reference = IWasBoredAPI.instance().neuralRegistry().getNeuralInterface(player);
+				return reference == null ? null : new NeuralContainer(reference);
 			}
 		}
 

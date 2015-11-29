@@ -1,6 +1,7 @@
 package org.squiddev.iwasbored.neural;
 
 import baubles.common.lib.PlayerHandler;
+import com.google.common.collect.Iterables;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.ILuaObject;
 import dan200.computercraft.api.lua.LuaException;
@@ -9,13 +10,14 @@ import dan200.computercraft.shared.computer.core.ServerComputer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import org.squiddev.iwasbored.DebugLogger;
 import org.squiddev.iwasbored.api.IWasBoredAPI;
 import org.squiddev.iwasbored.api.neural.INeuralInterface;
+import org.squiddev.iwasbored.api.neural.INeuralRegistry;
 import org.squiddev.iwasbored.api.neural.INeuralUpgrade;
-import org.squiddev.iwasbored.api.neural.INeuralUpgradeRegistry;
 import org.squiddev.iwasbored.computer.ServerComputerManager;
-import org.squiddev.iwasbored.DebugLogger;
 import org.squiddev.iwasbored.lua.LuaInventory;
+import org.squiddev.iwasbored.lua.LuaObjectCollection;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,6 +29,7 @@ public class NeuralInterface extends ServerComputerManager implements INeuralInt
 
 	private final HashMap<String, INeuralUpgrade> upgrades = new HashMap<String, INeuralUpgrade>();
 	private final HashMap<String, ILuaObject> upgradeObjects = new HashMap<String, ILuaObject>();
+	private final ILuaObject apiMethods;
 
 	public final EntityPlayer player;
 	public final int instanceId;
@@ -39,6 +42,11 @@ public class NeuralInterface extends ServerComputerManager implements INeuralInt
 
 		fromNBT(tagCompound);
 		turnOn();
+
+		apiMethods = new LuaObjectCollection(Iterables.concat(
+			Collections.singleton(new CoreObject()),
+			IWasBoredAPI.instance().neuralRegistry().getLua(this)
+		));
 	}
 
 	//region INeuralInterface
@@ -127,7 +135,7 @@ public class NeuralInterface extends ServerComputerManager implements INeuralInt
 
 		NBTTagCompound upgrades = compound.getCompoundTag("upgrades");
 		if (upgrades != null) {
-			INeuralUpgradeRegistry registry = IWasBoredAPI.instance().neuralRegistry();
+			INeuralRegistry registry = IWasBoredAPI.instance().neuralRegistry();
 			for (Object key : upgrades.func_150296_c()) {
 				if (key instanceof String) {
 					String name = (String) key;
@@ -176,45 +184,57 @@ public class NeuralInterface extends ServerComputerManager implements INeuralInt
 
 	@Override
 	public String[] getMethodNames() {
-		return new String[]{
-			"getInventory",
-			"getArmor",
-			"getBaubles",
-			"getUpgradeNames",
-			"getUpgrade",
-		};
+		return apiMethods.getMethodNames();
 	}
 
 	@Override
 	public Object[] callMethod(ILuaContext context, int method, Object[] args) throws LuaException, InterruptedException {
-		switch (method) {
-			case 0:
-				// TODO: Implements bounds on these
-				return new Object[]{new LuaInventory(player, player.inventory, 0, 9 * 4)};
-			case 1:
-				return new Object[]{new LuaInventory(player, player.inventory, 9 * 4, 4)};
-			case 2:
-				return new Object[]{new LuaInventory(player, PlayerHandler.getPlayerBaubles(player))};
-			case 3: {
-				HashMap<Integer, String> results = new HashMap<Integer, String>();
-				int i = 0;
-				for (String name : upgradeObjects.keySet()) {
-					results.put(i, name);
-				}
-
-				return new Object[]{results};
-			}
-			case 4: {
-				if (args.length == 0 || !(args[0] instanceof String)) throw new LuaException("Expected string");
-				ILuaObject object = upgradeObjects.get((String) args[0]);
-
-				if (object == null) throw new LuaException("No such upgrade");
-
-				return new Object[]{object};
-			}
-		}
-
-		return null;
+		return apiMethods.callMethod(context, method, args);
 	}
 	//endregion
+
+	private class CoreObject implements ILuaObject {
+
+		@Override
+		public String[] getMethodNames() {
+			return new String[]{
+				"getInventory",
+				"getArmor",
+				"getUpgradeNames",
+				"getUpgrade",
+			};
+		}
+
+		@Override
+		public Object[] callMethod(ILuaContext context, int method, Object[] args) throws LuaException, InterruptedException {
+			switch (method) {
+				case 0:
+					// TODO: Implements bounds on these
+					return new Object[]{new LuaInventory(player, player.inventory, 0, 9 * 4)};
+				case 1:
+					return new Object[]{new LuaInventory(player, player.inventory, 9 * 4, 4)};
+				case 2:
+					return new Object[]{new LuaInventory(player, PlayerHandler.getPlayerBaubles(player))};
+				case 3: {
+					HashMap<Integer, String> results = new HashMap<Integer, String>();
+					int i = 0;
+					for (String name : upgradeObjects.keySet()) {
+						results.put(i, name);
+					}
+
+					return new Object[]{results};
+				}
+				case 4: {
+					if (args.length == 0 || !(args[0] instanceof String)) throw new LuaException("Expected string");
+					ILuaObject object = upgradeObjects.get((String) args[0]);
+
+					if (object == null) throw new LuaException("No such upgrade");
+
+					return new Object[]{object};
+				}
+			}
+
+			return null;
+		}
+	}
 }

@@ -3,11 +3,13 @@ package org.squiddev.iwasbored.registry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import org.squiddev.iwasbored.client.render.RenderModelInterface;
+import org.squiddev.iwasbored.integration.BaublesIntegration;
 import org.squiddev.iwasbored.integration.openperipheral.OpenPeripheralIntegration;
 import org.squiddev.iwasbored.items.ItemNeuralConnector;
 import org.squiddev.iwasbored.items.ItemNeuralInterface;
 import org.squiddev.iwasbored.lua.meta.BasicItemMP;
 import org.squiddev.iwasbored.lua.meta.FoodItemMP;
+import org.squiddev.iwasbored.neural.ArmorProvider;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,10 +33,14 @@ public final class Registry {
 
 		addModule(new RenderModelInterface());
 
+		// Neural interface code
 		addModule(new BasicItemMP());
 		addModule(new FoodItemMP());
+		addModule(new ArmorProvider());
 
+		// Integration
 		addModule(new OpenPeripheralIntegration());
+		addModule(new BaublesIntegration());
 	}
 
 	public static void addModule(IModule module) {

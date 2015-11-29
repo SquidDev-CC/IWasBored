@@ -39,4 +39,9 @@ public interface INeuralInterface {
 	 * Mark this, or one of its upgrades dirty
 	 */
 	void markDirty();
+
+	/**
+	 * Force the neural interface to be on
+	 */
+	void turnOn();
 }

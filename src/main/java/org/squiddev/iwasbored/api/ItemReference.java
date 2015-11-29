@@ -1,4 +1,4 @@
-package org.squiddev.iwasbored.api.meta;
+package org.squiddev.iwasbored.api;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -7,27 +7,13 @@ import net.minecraft.item.ItemStack;
 /**
  * Reference to a item
  */
-public interface ItemReference {
+public interface ItemReference extends IReference<ItemStack> {
 	/**
 	 * Get the inventory that this item refers to
 	 *
 	 * @return The inventory
 	 */
 	IInventory getInventory();
-
-	/**
-	 * If the item is still there
-	 *
-	 * @return If this item is still here.
-	 */
-	boolean isValid();
-
-	/**
-	 * Get the item stack
-	 *
-	 * @return The item stack. This will be {@code null} if the item has moved (well, actually if the item is not the same as it was before).
-	 */
-	ItemStack getStack();
 
 	/**
 	 * The player that that owns this item.

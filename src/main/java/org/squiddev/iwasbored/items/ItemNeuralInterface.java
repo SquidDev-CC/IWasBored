@@ -2,6 +2,7 @@ package org.squiddev.iwasbored.items;
 
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
@@ -20,6 +21,7 @@ import org.squiddev.iwasbored.neural.NeuralInterface;
 import org.squiddev.iwasbored.neural.NeuralManager;
 import org.squiddev.iwasbored.registry.IModule;
 
+@Optional.Interface(iface = "baubles.api.IBauble", modid = "Baubles")
 public class ItemNeuralInterface extends ItemArmor implements IBauble, ISpecialArmor, IModule {
 	private static final ArmorMaterial FAKE_ARMOUR = EnumHelper.addArmorMaterial("FAKE_ARMOUR", 33, new int[]{0, 0, 0, 0}, 0);
 	private static final ArmorProperties FAKE_PROPERTIES = new ArmorProperties(0, 0, 0);
@@ -34,11 +36,13 @@ public class ItemNeuralInterface extends ItemArmor implements IBauble, ISpecialA
 
 	//region IBauble
 	@Override
+	@Optional.Method(modid = "Baubles")
 	public BaubleType getBaubleType(ItemStack itemstack) {
 		return BaubleType.AMULET;
 	}
 
 	@Override
+	@Optional.Method(modid = "Baubles")
 	public void onWornTick(ItemStack stack, EntityLivingBase player) {
 		if (ItemUtils.getLastPlayerHashcode(stack) != player.hashCode()) {
 			onEquippedOrLoadedIntoWorld(stack, player);
@@ -50,6 +54,7 @@ public class ItemNeuralInterface extends ItemArmor implements IBauble, ISpecialA
 		}
 	}
 
+	@Optional.Method(modid = "Baubles")
 	public void onEquippedOrLoadedIntoWorld(ItemStack stack, EntityLivingBase player) {
 		if (player instanceof EntityPlayer) {
 			onUpdate(stack, (EntityPlayer) player, true);
@@ -57,21 +62,25 @@ public class ItemNeuralInterface extends ItemArmor implements IBauble, ISpecialA
 	}
 
 	@Override
+	@Optional.Method(modid = "Baubles")
 	public void onEquipped(ItemStack stack, EntityLivingBase player) {
 		onEquippedOrLoadedIntoWorld(stack, player);
 		ItemUtils.setLastPlayerHashcode(stack, player.hashCode());
 	}
 
 	@Override
+	@Optional.Method(modid = "Baubles")
 	public void onUnequipped(ItemStack stack, EntityLivingBase entity) {
 	}
 
 	@Override
+	@Optional.Method(modid = "Baubles")
 	public boolean canEquip(ItemStack itemstack, EntityLivingBase player) {
 		return true;
 	}
 
 	@Override
+	@Optional.Method(modid = "Baubles")
 	public boolean canUnequip(ItemStack itemstack, EntityLivingBase player) {
 		return true;
 	}
@@ -109,6 +118,7 @@ public class ItemNeuralInterface extends ItemArmor implements IBauble, ISpecialA
 	}
 
 	@Override
+	@Optional.Method(modid = "Baubles")
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
 		return ItemUtils.replaceBauble(this, stack, world, player);
 	}
@@ -160,12 +170,10 @@ public class ItemNeuralInterface extends ItemArmor implements IBauble, ISpecialA
 
 	@Override
 	public void init() {
-
 	}
 
 	@Override
 	public void postInit() {
-
 	}
 	//endregion
 }

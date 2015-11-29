@@ -4,7 +4,7 @@ import com.google.common.base.Preconditions;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import org.squiddev.iwasbored.api.meta.ItemReference;
+import org.squiddev.iwasbored.api.ItemReference;
 
 public final class SingleItem implements ItemReference {
 	public final IInventory inventory;
@@ -22,7 +22,7 @@ public final class SingleItem implements ItemReference {
 	}
 
 	@Override
-	public ItemStack getStack() {
+	public ItemStack get() {
 		if (player != null && !player.isEntityAlive()) return null;
 
 		ItemStack current = inventory.getStackInSlot(slot);
@@ -49,6 +49,6 @@ public final class SingleItem implements ItemReference {
 
 	@Override
 	public boolean isValid() {
-		return getStack() != null;
+		return get() != null;
 	}
 }

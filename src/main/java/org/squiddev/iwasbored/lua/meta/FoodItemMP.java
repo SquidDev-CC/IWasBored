@@ -9,8 +9,8 @@ import net.minecraft.item.*;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import org.squiddev.iwasbored.api.IWasBoredAPI;
+import org.squiddev.iwasbored.api.ItemReference;
 import org.squiddev.iwasbored.api.meta.IItemMetaProvider;
-import org.squiddev.iwasbored.api.meta.ItemReference;
 import org.squiddev.iwasbored.registry.Module;
 
 import java.util.HashMap;
@@ -60,7 +60,7 @@ public class FoodItemMP extends Module implements IItemMetaProvider {
 
 	@Override
 	public ILuaObject getObject(ItemReference reference) {
-		ItemStack stack = reference.getStack();
+		ItemStack stack = reference.get();
 		if (stack != null && reference.getPlayer() != null) {
 			EnumAction action = stack.getItemUseAction();
 			if (action == EnumAction.eat || action == EnumAction.drink) {
@@ -95,7 +95,7 @@ public class FoodItemMP extends Module implements IItemMetaProvider {
 			switch (method) {
 				case 0:
 					EntityPlayer player = reference.getPlayer();
-					reference.replace(reference.getStack().onFoodEaten(player.getEntityWorld(), player));
+					reference.replace(reference.get().onFoodEaten(player.getEntityWorld(), player));
 					return null;
 			}
 
