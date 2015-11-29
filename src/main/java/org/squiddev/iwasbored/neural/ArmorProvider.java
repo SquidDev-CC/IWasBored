@@ -3,6 +3,7 @@ package org.squiddev.iwasbored.neural;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import org.squiddev.iwasbored.api.IWasBoredAPI;
 import org.squiddev.iwasbored.api.IProvider;
 import org.squiddev.iwasbored.api.neural.INeuralReference;
 import org.squiddev.iwasbored.inventory.SingleItem;
@@ -29,5 +30,10 @@ public class ArmorProvider extends Module implements IProvider<EntityLivingBase,
 		}
 
 		return null;
+	}
+
+	@Override
+	public void postInit() {
+		IWasBoredAPI.instance().neuralRegistry().registerNeuralProvider(this);
 	}
 }
