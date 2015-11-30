@@ -1,14 +1,12 @@
 package org.squiddev.iwasbored.integration.openperipheral;
 
 import cpw.mods.fml.common.Optional;
-import dan200.computercraft.api.lua.ILuaObject;
 import net.minecraft.item.ItemStack;
 import openperipheral.api.ApiAccess;
 import openperipheral.api.meta.IItemStackMetaBuilder;
 import org.squiddev.iwasbored.DebugLogger;
+import org.squiddev.iwasbored.api.IProvider;
 import org.squiddev.iwasbored.api.IWasBoredAPI;
-import org.squiddev.iwasbored.api.ItemReference;
-import org.squiddev.iwasbored.api.meta.IItemMetaProvider;
 import org.squiddev.iwasbored.integration.ModIntegration;
 
 import java.util.Map;
@@ -24,15 +22,10 @@ public class OpenPeripheralIntegration extends ModIntegration {
 		try {
 			if (ApiAccess.isApiPresent(IItemStackMetaBuilder.class)) {
 				final IItemStackMetaBuilder builder = ApiAccess.getApi(IItemStackMetaBuilder.class);
-				IWasBoredAPI.instance().metaRegistry().registerItemProvider(new IItemMetaProvider() {
+				IWasBoredAPI.instance().metaRegistry().registerItemMetadata(new IProvider<ItemStack, Map<String, Object>>() {
 					@Override
-					public void getMetadata(ItemStack stack, Map<String, Object> data) {
-						data.putAll(builder.getItemStackMetadata(stack));
-					}
-
-					@Override
-					public ILuaObject getObject(ItemReference stack) {
-						return null;
+					public Map<String, Object> get(ItemStack stack) {
+						return builder.getItemStackMetadata(stack);
 					}
 
 					@Override
@@ -46,6 +39,5 @@ public class OpenPeripheralIntegration extends ModIntegration {
 		} catch (IllegalStateException e) {
 			DebugLogger.error("Cannot register with OpenPeripheral", e);
 		}
-
 	}
 }

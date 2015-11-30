@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import org.squiddev.iwasbored.api.IWasBoredAPI;
+import org.squiddev.iwasbored.api.ItemReference;
 import org.squiddev.iwasbored.inventory.InventoryUtils;
 import org.squiddev.iwasbored.inventory.SingleItem;
 
@@ -62,7 +63,7 @@ public class LuaInventory implements ILuaObject {
 
 				if (item.isValid()) {
 					return new Object[]{
-						new LuaReference<ItemStack>(IWasBoredAPI.instance().metaRegistry().getItemMethods(item), item, "Item is no longer there")
+						new LuaReference<ItemStack>(IWasBoredAPI.instance().metaRegistry().getObjectMethods(item, ItemReference.class), item, "Item is no longer there")
 					};
 				}
 

@@ -5,18 +5,13 @@ import dan200.computercraft.api.lua.ILuaObject;
 import net.minecraft.item.ItemStack;
 import org.squiddev.iwasbored.api.IIWasBoredAPI;
 import org.squiddev.iwasbored.api.IProvider;
-import org.squiddev.iwasbored.api.ItemReference;
-import org.squiddev.iwasbored.api.meta.IItemMetaProvider;
 import org.squiddev.iwasbored.api.meta.IMetaRegistry;
 import org.squiddev.iwasbored.api.neural.INeuralRegistry;
 import org.squiddev.iwasbored.inventory.InventoryUtils;
 import org.squiddev.iwasbored.neural.NeuralRegistry;
 import org.squiddev.iwasbored.utils.SortedCollection;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class API implements IIWasBoredAPI {
 	private final INeuralRegistry neuralRegistry = new NeuralRegistry();
@@ -40,17 +35,14 @@ public class API implements IIWasBoredAPI {
 	};
 
 	private static class MetaRegistry implements IMetaRegistry {
-		private final SortedCollection<IItemMetaProvider> providers = new SortedCollection<IItemMetaProvider>(new Comparator<IItemMetaProvider>() {
-			@Override
-			public int compare(IItemMetaProvider a, IItemMetaProvider b) {
-				return b.getPriority() - a.getPriority();
-			}
-		});
+		private final SortedCollection<IProvider<ItemStack, Map<String, Object>>> metaProviders = new SortedCollection<IProvider<ItemStack, Map<String, Object>>>(providerComparer);
+
+		private final HashMap<Class<?>, SortedCollection<IProvider>> targetedProviders = new HashMap<Class<?>, SortedCollection<IProvider>>();
 
 		@Override
-		public void registerItemProvider(IItemMetaProvider provider) {
+		public void registerItemMetadata(IProvider<ItemStack, Map<String, Object>> provider) {
 			Preconditions.checkNotNull(provider, "provider cannot be null");
-			providers.add(provider);
+			metaProviders.add(provider);
 		}
 
 		@Override
@@ -59,22 +51,75 @@ public class API implements IIWasBoredAPI {
 
 			Map<String, Object> data = InventoryUtils.getBasicProperties(stack);
 
-			for (IItemMetaProvider provider : providers) {
-				provider.getMetadata(stack, data);
+			for (IProvider<ItemStack, Map<String, Object>> provider : metaProviders) {
+				Map<String, Object> subData = provider.get(stack);
+				if (subData != null) data.putAll(subData);
 			}
 
 			return data;
 		}
 
 		@Override
-		public Iterable<ILuaObject> getItemMethods(ItemReference stack) {
-			Preconditions.checkNotNull(stack, "stack cannot be null");
+		public <T> void registerMethodProvider(IProvider<T, ILuaObject> provider, Class<T> target) {
+			Preconditions.checkNotNull("provider", "provider cannot be null");
+			Preconditions.checkNotNull("target", "target cannot be null");
+
+			SortedCollection<IProvider> providers = targetedProviders.get(target);
+			if (providers == null) {
+				providers = new SortedCollection<IProvider>(providerComparer);
+				targetedProviders.put(target, providers);
+			}
+
+			providers.add(provider);
+		}
+
+		@Override
+		@SuppressWarnings("unchecked")
+		public <T> Iterable<ILuaObject> getObjectMethods(T object) {
+			Preconditions.checkNotNull(object, "object cannot be null");
+
+			// Try classes first
+			Class<?> klass = object.getClass();
+			SortedCollection<IProvider> providers = targetedProviders.get(klass);
+			while (providers == null && klass != null) {
+				klass = klass.getSuperclass();
+				providers = targetedProviders.get(klass);
+			}
+
+			if (providers == null) {
+				for (Class<?> iFace : object.getClass().getInterfaces()) {
+					providers = targetedProviders.get(iFace);
+					if (providers == null) break;
+				}
+
+				if (providers == null) return Collections.emptyList();
+			}
+
 
 			List<ILuaObject> objects = new ArrayList<ILuaObject>();
 
-			for (IItemMetaProvider provider : providers) {
-				ILuaObject object = provider.getObject(stack);
-				if (object != null) objects.add(object);
+			for (IProvider provider : providers) {
+				ILuaObject luaObject = (ILuaObject) provider.get(object);
+				if (luaObject != null) objects.add(luaObject);
+			}
+
+			return objects;
+		}
+
+		@Override
+		@SuppressWarnings("unchecked")
+		public <T> Iterable<ILuaObject> getObjectMethods(T object, Class<T> target) {
+			Preconditions.checkNotNull(object, "object cannot be null");
+			Preconditions.checkNotNull(object, "target cannot be null");
+
+			SortedCollection<IProvider> providers = targetedProviders.get(target);
+			if (providers == null) return Collections.emptyList();
+
+			List<ILuaObject> objects = new ArrayList<ILuaObject>();
+
+			for (IProvider provider : providers) {
+				ILuaObject luaObject = (ILuaObject) provider.get(object);
+				if (luaObject != null) objects.add(luaObject);
 			}
 
 			return objects;

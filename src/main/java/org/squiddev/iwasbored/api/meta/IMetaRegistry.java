@@ -2,20 +2,20 @@ package org.squiddev.iwasbored.api.meta;
 
 import dan200.computercraft.api.lua.ILuaObject;
 import net.minecraft.item.ItemStack;
-import org.squiddev.iwasbored.api.ItemReference;
+import org.squiddev.iwasbored.api.IProvider;
 
 import java.util.Map;
 
 public interface IMetaRegistry {
 	/**
-	 * Register an item provider
+	 * Register a provider for item metadata
 	 *
-	 * @param provider The item provider
+	 * @param provider The provider
 	 */
-	void registerItemProvider(IItemMetaProvider provider);
+	void registerItemMetadata(IProvider<ItemStack, Map<String, Object>> provider);
 
 	/**
-	 * Get all properties for a method
+	 * Get all metadata for an item
 	 *
 	 * @param stack The item to provide metadata for
 	 * @return The metadata for the item
@@ -23,10 +23,28 @@ public interface IMetaRegistry {
 	Map<String, Object> getItemMetadata(ItemStack stack);
 
 	/**
-	 * Get all methods for an item
+	 * Add a method provider for an object
 	 *
-	 * @param stack The item to provide methods for
+	 * @param provider The provider
+	 * @param target   The class this provider targets. This can be an interface.
+	 * @param <T>      The type this provider targets
+	 */
+	<T> void registerMethodProvider(IProvider<T, ILuaObject> provider, Class<T> target);
+
+	/**
+	 * Get all methods for an object
+	 *
+	 * @param object The object to provide methods for
 	 * @return All methods provided
 	 */
-	Iterable<ILuaObject> getItemMethods(ItemReference stack);
+	<T> Iterable<ILuaObject> getObjectMethods(T object);
+
+	/**
+	 * Get all methods for an object
+	 *
+	 * @param object The object to provide methods for
+	 * @param target The target class. This should be faster than the above method, an resolves interface ambiguities.
+	 * @return All methods provided
+	 */
+	<T> Iterable<ILuaObject> getObjectMethods(T object, Class<T> target);
 }

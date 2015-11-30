@@ -7,8 +7,7 @@ import org.squiddev.iwasbored.integration.BaublesIntegration;
 import org.squiddev.iwasbored.integration.openperipheral.OpenPeripheralIntegration;
 import org.squiddev.iwasbored.items.ItemNeuralConnector;
 import org.squiddev.iwasbored.items.ItemNeuralInterface;
-import org.squiddev.iwasbored.lua.meta.BasicItemMP;
-import org.squiddev.iwasbored.lua.meta.FoodItemMP;
+import org.squiddev.iwasbored.lua.MetaProviders;
 import org.squiddev.iwasbored.neural.ArmorProvider;
 
 import java.util.HashSet;
@@ -34,8 +33,7 @@ public final class Registry {
 		addModule(new RenderModelInterface());
 
 		// Neural interface code
-		addModule(new BasicItemMP());
-		addModule(new FoodItemMP());
+		addModule(new MetaProviders());
 		addModule(new ArmorProvider());
 
 		// Integration
