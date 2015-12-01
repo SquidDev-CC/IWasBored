@@ -7,8 +7,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import org.squiddev.iwasbored.API;
-import org.squiddev.iwasbored.api.IProvider;
 import org.squiddev.iwasbored.api.neural.*;
+import org.squiddev.iwasbored.api.provider.IProvider;
 import org.squiddev.iwasbored.utils.SortedCollection;
 
 import java.util.ArrayList;

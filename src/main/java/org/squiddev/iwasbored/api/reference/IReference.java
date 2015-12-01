@@ -1,4 +1,4 @@
-package org.squiddev.iwasbored.api;
+package org.squiddev.iwasbored.api.reference;
 
 /**
  * A reference to another object

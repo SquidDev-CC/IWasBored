@@ -4,24 +4,26 @@ import com.google.common.collect.Maps;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.ILuaObject;
 import dan200.computercraft.api.lua.LuaException;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.*;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import org.squiddev.iwasbored.api.DefaultProvider;
 import org.squiddev.iwasbored.api.IWasBoredAPI;
-import org.squiddev.iwasbored.api.ItemReference;
-import org.squiddev.iwasbored.api.meta.IMetaRegistry;
+import org.squiddev.iwasbored.api.provider.DefaultProvider;
+import org.squiddev.iwasbored.api.provider.IProviderRegistry;
+import org.squiddev.iwasbored.api.reference.ItemReference;
 import org.squiddev.iwasbored.registry.Module;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MetaProviders extends Module {
+public class Providers extends Module {
 	@Override
 	public void preInit() {
-		IMetaRegistry registry = IWasBoredAPI.instance().metaRegistry();
+		IProviderRegistry registry = IWasBoredAPI.instance().coreRegistry();
 
 		registry.registerMethodProvider(new DefaultProvider<ItemReference, ILuaObject>() {
 			@Override
@@ -36,7 +38,7 @@ public class MetaProviders extends Module {
 			@Override
 			public ILuaObject get(ItemReference reference) {
 				ItemStack stack = reference.get();
-				if (stack != null && reference.getPlayer() != null) {
+				if (stack != null && reference.getEntity() != null) {
 					EnumAction action = stack.getItemUseAction();
 					if (action == EnumAction.eat || action == EnumAction.drink) {
 						return new ConsumableObject(reference);
@@ -46,6 +48,13 @@ public class MetaProviders extends Module {
 				return null;
 			}
 		}, ItemReference.class);
+
+		registry.registerMethodProvider(new DefaultProvider<IInventory, ILuaObject>() {
+			@Override
+			public ILuaObject get(IInventory inventory) {
+				return new LuaInventory(null, inventory);
+			}
+		}, IInventory.class);
 	}
 
 	private static class ConsumableObject implements ILuaObject {
@@ -66,9 +75,13 @@ public class MetaProviders extends Module {
 		public Object[] callMethod(ILuaContext context, int method, Object[] objects) throws LuaException, InterruptedException {
 			switch (method) {
 				case 0:
-					EntityPlayer player = reference.getPlayer();
-					reference.replace(reference.get().onFoodEaten(player.getEntityWorld(), player));
-					return null;
+					EntityLivingBase entity = reference.getEntity();
+					if (entity instanceof EntityPlayer) {
+						reference.replace(reference.get().onFoodEaten(entity.worldObj, (EntityPlayer) entity));
+						return null;
+					} else {
+						throw new LuaException("Not a player");
+					}
 			}
 
 			return null;
@@ -139,7 +152,7 @@ public class MetaProviders extends Module {
 		public Object[] callMethod(ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
 			switch (method) {
 				case 0:
-					return new Object[]{IWasBoredAPI.instance().metaRegistry().getItemMetadata(item.get())};
+					return new Object[]{IWasBoredAPI.instance().coreRegistry().getItemMetadata(item.get())};
 			}
 			return null;
 		}

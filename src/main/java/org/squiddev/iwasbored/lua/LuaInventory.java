@@ -3,28 +3,28 @@ package org.squiddev.iwasbored.lua;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.ILuaObject;
 import dan200.computercraft.api.lua.LuaException;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import org.squiddev.iwasbored.api.IWasBoredAPI;
-import org.squiddev.iwasbored.api.ItemReference;
+import org.squiddev.iwasbored.api.reference.ItemReference;
 import org.squiddev.iwasbored.inventory.InventoryUtils;
 import org.squiddev.iwasbored.inventory.SingleItem;
 
 import java.util.HashMap;
 
 public class LuaInventory implements ILuaObject {
-	private final EntityPlayer player;
+	private final EntityLivingBase entity;
 	private final IInventory inventory;
 	private final int size;
 	private final int offset;
 
-	public LuaInventory(EntityPlayer player, IInventory inventory) {
-		this(player, inventory, 0, inventory.getSizeInventory());
+	public LuaInventory(EntityLivingBase entity, IInventory inventory) {
+		this(entity, inventory, 0, inventory.getSizeInventory());
 	}
 
-	public LuaInventory(EntityPlayer player, IInventory inventory, int offset, int size) {
-		this.player = player;
+	public LuaInventory(EntityLivingBase entity, IInventory inventory, int offset, int size) {
+		this.entity = entity;
 		this.inventory = inventory;
 		this.size = size;
 		this.offset = offset;
@@ -58,12 +58,12 @@ public class LuaInventory implements ILuaObject {
 				int slot = ((Number) args[0]).intValue();
 				if (slot < 1 || slot > size) throw new LuaException("Slot out of range");
 
-				SingleItem item = new SingleItem(inventory, slot - 1, player);
+				SingleItem item = new SingleItem(inventory, slot - 1, entity);
 
 
 				if (item.isValid()) {
 					return new Object[]{
-						new LuaReference<ItemStack>(IWasBoredAPI.instance().metaRegistry().getObjectMethods(item, ItemReference.class), item, "Item is no longer there")
+						new LuaReference<ItemStack>(IWasBoredAPI.instance().coreRegistry().getObjectMethods(item, ItemReference.class), item, "Item is no longer there")
 					};
 				}
 

@@ -1,7 +1,7 @@
 package org.squiddev.iwasbored.api;
 
-import org.squiddev.iwasbored.api.meta.IMetaRegistry;
 import org.squiddev.iwasbored.api.neural.INeuralRegistry;
+import org.squiddev.iwasbored.api.provider.IProviderRegistry;
 
 /**
  * Provider for the IWasBored API
@@ -15,9 +15,9 @@ public interface IIWasBoredAPI {
 	INeuralRegistry neuralRegistry();
 
 	/**
-	 * Get the meta provider registry
+	 * Get the main provider registry
 	 *
-	 * @return The meta provider registry
+	 * @return The main provider registry
 	 */
-	IMetaRegistry metaRegistry();
+	IProviderRegistry coreRegistry();
 }

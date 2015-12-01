@@ -3,7 +3,7 @@ package org.squiddev.iwasbored.api.neural;
 import dan200.computercraft.api.lua.ILuaObject;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
-import org.squiddev.iwasbored.api.IProvider;
+import org.squiddev.iwasbored.api.provider.IProvider;
 
 /**
  * The registry for various neural interface components.

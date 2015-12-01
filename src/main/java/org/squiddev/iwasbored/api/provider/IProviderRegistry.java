@@ -1,12 +1,11 @@
-package org.squiddev.iwasbored.api.meta;
+package org.squiddev.iwasbored.api.provider;
 
 import dan200.computercraft.api.lua.ILuaObject;
 import net.minecraft.item.ItemStack;
-import org.squiddev.iwasbored.api.IProvider;
 
 import java.util.Map;
 
-public interface IMetaRegistry {
+public interface IProviderRegistry {
 	/**
 	 * Register a provider for item metadata
 	 *

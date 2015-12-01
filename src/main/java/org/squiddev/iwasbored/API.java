@@ -4,9 +4,9 @@ import com.google.common.base.Preconditions;
 import dan200.computercraft.api.lua.ILuaObject;
 import net.minecraft.item.ItemStack;
 import org.squiddev.iwasbored.api.IIWasBoredAPI;
-import org.squiddev.iwasbored.api.IProvider;
-import org.squiddev.iwasbored.api.meta.IMetaRegistry;
 import org.squiddev.iwasbored.api.neural.INeuralRegistry;
+import org.squiddev.iwasbored.api.provider.IProvider;
+import org.squiddev.iwasbored.api.provider.IProviderRegistry;
 import org.squiddev.iwasbored.inventory.InventoryUtils;
 import org.squiddev.iwasbored.neural.NeuralRegistry;
 import org.squiddev.iwasbored.utils.SortedCollection;
@@ -15,7 +15,7 @@ import java.util.*;
 
 public class API implements IIWasBoredAPI {
 	private final INeuralRegistry neuralRegistry = new NeuralRegistry();
-	private final MetaRegistry metaRegistry = new MetaRegistry();
+	private final ProviderRegistry metaRegistry = new ProviderRegistry();
 
 	@Override
 	public INeuralRegistry neuralRegistry() {
@@ -23,7 +23,7 @@ public class API implements IIWasBoredAPI {
 	}
 
 	@Override
-	public IMetaRegistry metaRegistry() {
+	public IProviderRegistry coreRegistry() {
 		return metaRegistry;
 	}
 
@@ -34,7 +34,7 @@ public class API implements IIWasBoredAPI {
 		}
 	};
 
-	private static class MetaRegistry implements IMetaRegistry {
+	private static class ProviderRegistry implements IProviderRegistry {
 		private final SortedCollection<IProvider<ItemStack, Map<String, Object>>> metaProviders = new SortedCollection<IProvider<ItemStack, Map<String, Object>>>(providerComparer);
 
 		private final HashMap<Class<?>, SortedCollection<IProvider>> targetedProviders = new HashMap<Class<?>, SortedCollection<IProvider>>();

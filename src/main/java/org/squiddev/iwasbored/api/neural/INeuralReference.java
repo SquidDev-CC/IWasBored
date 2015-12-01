@@ -1,7 +1,7 @@
 package org.squiddev.iwasbored.api.neural;
 
 import net.minecraft.nbt.NBTTagCompound;
-import org.squiddev.iwasbored.api.IReference;
+import org.squiddev.iwasbored.api.reference.IReference;
 
 /**
  * Reference to a neural interface

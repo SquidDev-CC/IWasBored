@@ -1,5 +1,6 @@
 package org.squiddev.iwasbored.neural;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import org.squiddev.iwasbored.api.neural.INeuralInterface;
 import org.squiddev.iwasbored.api.neural.INeuralReference;
@@ -20,7 +21,11 @@ public class NeuralInterfaceReference implements INeuralReference {
 
 	@Override
 	public INeuralInterface get() {
-		return item.isValid() ? NeuralManager.get(ItemUtils.getTag(item.get()), item.getPlayer()) : null;
+		if (item.isValid() && item.getEntity() instanceof EntityPlayer) {
+			return NeuralManager.get(ItemUtils.getTag(item.get()), (EntityPlayer) item.getEntity());
+		} else {
+			return null;
+		}
 	}
 
 	@Override

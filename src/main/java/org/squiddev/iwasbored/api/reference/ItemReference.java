@@ -1,26 +1,18 @@
-package org.squiddev.iwasbored.api;
+package org.squiddev.iwasbored.api.reference;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
 /**
  * Reference to a item
  */
-public interface ItemReference extends IReference<ItemStack> {
+public interface ItemReference extends IReferenceWithEntity<ItemStack> {
 	/**
 	 * Get the inventory that this item refers to
 	 *
 	 * @return The inventory
 	 */
 	IInventory getInventory();
-
-	/**
-	 * The player that that owns this item.
-	 *
-	 * @return The player that holds this item, or {@code null} if there is no player.
-	 */
-	EntityPlayer getPlayer();
 
 	/**
 	 * Replace this item with another item

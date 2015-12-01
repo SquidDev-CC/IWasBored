@@ -1,4 +1,4 @@
-package org.squiddev.iwasbored.api;
+package org.squiddev.iwasbored.api.provider;
 
 /**
  * A basic provider interface, which searches {@link TSource} and returns {@link TResult}.

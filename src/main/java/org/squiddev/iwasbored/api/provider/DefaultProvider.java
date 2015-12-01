@@ -1,4 +1,4 @@
-package org.squiddev.iwasbored.api;
+package org.squiddev.iwasbored.api.provider;
 
 /**
  * A basic provider that has the default priority.

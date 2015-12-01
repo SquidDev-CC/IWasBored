@@ -5,8 +5,8 @@ import net.minecraft.item.ItemStack;
 import openperipheral.api.ApiAccess;
 import openperipheral.api.meta.IItemStackMetaBuilder;
 import org.squiddev.iwasbored.DebugLogger;
-import org.squiddev.iwasbored.api.IProvider;
 import org.squiddev.iwasbored.api.IWasBoredAPI;
+import org.squiddev.iwasbored.api.provider.IProvider;
 import org.squiddev.iwasbored.integration.ModIntegration;
 
 import java.util.Map;
@@ -22,7 +22,7 @@ public class OpenPeripheralIntegration extends ModIntegration {
 		try {
 			if (ApiAccess.isApiPresent(IItemStackMetaBuilder.class)) {
 				final IItemStackMetaBuilder builder = ApiAccess.getApi(IItemStackMetaBuilder.class);
-				IWasBoredAPI.instance().metaRegistry().registerItemMetadata(new IProvider<ItemStack, Map<String, Object>>() {
+				IWasBoredAPI.instance().coreRegistry().registerItemMetadata(new IProvider<ItemStack, Map<String, Object>>() {
 					@Override
 					public Map<String, Object> get(ItemStack stack) {
 						return builder.getItemStackMetadata(stack);

@@ -3,7 +3,7 @@ package org.squiddev.iwasbored.lua;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.ILuaObject;
 import dan200.computercraft.api.lua.LuaException;
-import org.squiddev.iwasbored.api.IReference;
+import org.squiddev.iwasbored.api.reference.IReference;
 
 public class LuaReference<T> extends LuaObjectCollection {
 	private final IReference<T> reference;
