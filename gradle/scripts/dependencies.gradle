@@ -45,7 +45,7 @@ dependencies {
 	packaged "openperipheral:OpenPeripheralCore-API:3.3"
 }
 
-sourceSets.main.compileClasspath += [configurations.packaged]
+sourceSets.main.compileClasspath += configurations.packaged
 
 idea.module.scopes.PROVIDED.plus += [configurations.packaged]
 eclipse.classpath.plusConfigurations += [configurations.packaged]

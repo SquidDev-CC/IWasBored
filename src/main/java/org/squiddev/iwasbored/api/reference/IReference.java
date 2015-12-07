@@ -17,4 +17,11 @@ public interface IReference<T> {
 	 * @return The value. This will be {@code null} if the target is no longer valid.
 	 */
 	T get();
+
+	/**
+	 * The owner of this reference. This will probably be a tile entity or a entity.
+	 *
+	 * @return The owner of this reference. This may be {@code null}.
+	 */
+	Object owner();
 }

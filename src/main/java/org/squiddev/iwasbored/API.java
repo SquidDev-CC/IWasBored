@@ -7,6 +7,7 @@ import org.squiddev.iwasbored.api.IIWasBoredAPI;
 import org.squiddev.iwasbored.api.neural.INeuralRegistry;
 import org.squiddev.iwasbored.api.provider.IProvider;
 import org.squiddev.iwasbored.api.provider.IProviderRegistry;
+import org.squiddev.iwasbored.api.reference.IReference;
 import org.squiddev.iwasbored.inventory.InventoryUtils;
 import org.squiddev.iwasbored.neural.NeuralRegistry;
 import org.squiddev.iwasbored.utils.SortedCollection;
@@ -60,7 +61,7 @@ public class API implements IIWasBoredAPI {
 		}
 
 		@Override
-		public <T> void registerMethodProvider(IProvider<T, ILuaObject> provider, Class<T> target) {
+		public <T> void registerMethodProvider(IProvider<IReference<T>, ILuaObject> provider, Class<T> target) {
 			Preconditions.checkNotNull("provider", "provider cannot be null");
 			Preconditions.checkNotNull("target", "target cannot be null");
 
@@ -75,40 +76,7 @@ public class API implements IIWasBoredAPI {
 
 		@Override
 		@SuppressWarnings("unchecked")
-		public <T> Iterable<ILuaObject> getObjectMethods(T object) {
-			Preconditions.checkNotNull(object, "object cannot be null");
-
-			// Try classes first
-			Class<?> klass = object.getClass();
-			SortedCollection<IProvider> providers = targetedProviders.get(klass);
-			while (providers == null && klass != null) {
-				klass = klass.getSuperclass();
-				providers = targetedProviders.get(klass);
-			}
-
-			if (providers == null) {
-				for (Class<?> iFace : object.getClass().getInterfaces()) {
-					providers = targetedProviders.get(iFace);
-					if (providers == null) break;
-				}
-
-				if (providers == null) return Collections.emptyList();
-			}
-
-
-			List<ILuaObject> objects = new ArrayList<ILuaObject>();
-
-			for (IProvider provider : providers) {
-				ILuaObject luaObject = (ILuaObject) provider.get(object);
-				if (luaObject != null) objects.add(luaObject);
-			}
-
-			return objects;
-		}
-
-		@Override
-		@SuppressWarnings("unchecked")
-		public <T> Iterable<ILuaObject> getObjectMethods(T object, Class<T> target) {
+		public <T> Iterable<ILuaObject> getObjectMethods(IReference<T> object, Class<T> target) {
 			Preconditions.checkNotNull(object, "object cannot be null");
 			Preconditions.checkNotNull(object, "target cannot be null");
 

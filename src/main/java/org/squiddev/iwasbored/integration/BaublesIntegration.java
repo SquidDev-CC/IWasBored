@@ -8,14 +8,17 @@ import dan200.computercraft.api.lua.ILuaObject;
 import dan200.computercraft.api.lua.LuaException;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import org.squiddev.iwasbored.api.IWasBoredAPI;
 import org.squiddev.iwasbored.api.neural.INeuralInterface;
 import org.squiddev.iwasbored.api.neural.INeuralReference;
 import org.squiddev.iwasbored.api.neural.INeuralRegistry;
 import org.squiddev.iwasbored.api.provider.IProvider;
-import org.squiddev.iwasbored.inventory.SingleItem;
+import org.squiddev.iwasbored.api.reference.IReference;
 import org.squiddev.iwasbored.lua.LuaInventory;
+import org.squiddev.iwasbored.lua.reference.EntityReference;
+import org.squiddev.iwasbored.lua.reference.SlotReference;
 import org.squiddev.iwasbored.neural.NeuralInterfaceReference;
 import org.squiddev.iwasbored.registry.Registry;
 
@@ -44,7 +47,9 @@ public class BaublesIntegration extends ModIntegration {
 
 					ItemStack stack = baubles.getStackInSlot(0);
 					if (stack != null && stack.getItem() == Registry.itemNeuralInterface) {
-						return new NeuralInterfaceReference(new SingleItem(baubles, 0, player));
+						IReference<IInventory> inventory = new EntityReference<IInventory>(baubles, player);
+						SlotReference slot = new SlotReference(inventory, 0);
+						return new NeuralInterfaceReference(slot);
 					}
 				}
 
@@ -68,7 +73,8 @@ public class BaublesIntegration extends ModIntegration {
 
 					@Override
 					public Object[] callMethod(ILuaContext context, int method, Object[] args) throws LuaException, InterruptedException {
-						return new Object[]{new LuaInventory(iFace.getPlayer(), PlayerHandler.getPlayerBaubles(iFace.getPlayer()))};
+						EntityPlayer player = iFace.getPlayer();
+						return new Object[]{new LuaInventory(PlayerHandler.getPlayerBaubles(player), player)};
 					}
 				};
 			}

@@ -4,16 +4,16 @@ import com.google.common.collect.Maps;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.ILuaObject;
 import dan200.computercraft.api.lua.LuaException;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.*;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import org.squiddev.iwasbored.api.IWasBoredAPI;
-import org.squiddev.iwasbored.api.provider.DefaultProvider;
+import org.squiddev.iwasbored.api.provider.AbstractProvider;
 import org.squiddev.iwasbored.api.provider.IProviderRegistry;
-import org.squiddev.iwasbored.api.reference.ItemReference;
+import org.squiddev.iwasbored.api.reference.IInventorySlot;
+import org.squiddev.iwasbored.api.reference.IReference;
 import org.squiddev.iwasbored.registry.Module;
 
 import java.util.HashMap;
@@ -25,20 +25,20 @@ public class Providers extends Module {
 	public void preInit() {
 		IProviderRegistry registry = IWasBoredAPI.instance().coreRegistry();
 
-		registry.registerMethodProvider(new DefaultProvider<ItemReference, ILuaObject>() {
+		registry.registerMethodProvider(new AbstractProvider<IReference<IInventorySlot>, ILuaObject>() {
 			@Override
-			public ILuaObject get(ItemReference reference) {
+			public ILuaObject get(IReference<IInventorySlot> reference) {
 				return new BasicObject(reference);
 			}
-		}, ItemReference.class);
+		}, IInventorySlot.class);
 
 		// Potion/food providers
 		registry.registerItemMetadata(new ConsumableMeta());
-		registry.registerMethodProvider(new DefaultProvider<ItemReference, ILuaObject>() {
+		registry.registerMethodProvider(new AbstractProvider<IReference<IInventorySlot>, ILuaObject>() {
 			@Override
-			public ILuaObject get(ItemReference reference) {
-				ItemStack stack = reference.get();
-				if (stack != null && reference.getEntity() != null) {
+			public ILuaObject get(IReference<IInventorySlot> reference) {
+				ItemStack stack = reference.get().stack();
+				if (stack != null && reference.owner() != null) {
 					EnumAction action = stack.getItemUseAction();
 					if (action == EnumAction.eat || action == EnumAction.drink) {
 						return new ConsumableObject(reference);
@@ -47,20 +47,20 @@ public class Providers extends Module {
 
 				return null;
 			}
-		}, ItemReference.class);
+		}, IInventorySlot.class);
 
-		registry.registerMethodProvider(new DefaultProvider<IInventory, ILuaObject>() {
+		registry.registerMethodProvider(new AbstractProvider<IReference<IInventory>, ILuaObject>() {
 			@Override
-			public ILuaObject get(IInventory inventory) {
-				return new LuaInventory(null, inventory);
+			public ILuaObject get(IReference<IInventory> inventory) {
+				return new LuaInventory(inventory);
 			}
 		}, IInventory.class);
 	}
 
 	private static class ConsumableObject implements ILuaObject {
-		private final ItemReference reference;
+		private final IReference<IInventorySlot> reference;
 
-		public ConsumableObject(ItemReference reference) {
+		public ConsumableObject(IReference<IInventorySlot> reference) {
 			this.reference = reference;
 		}
 
@@ -75,9 +75,10 @@ public class Providers extends Module {
 		public Object[] callMethod(ILuaContext context, int method, Object[] objects) throws LuaException, InterruptedException {
 			switch (method) {
 				case 0:
-					EntityLivingBase entity = reference.getEntity();
+					Object entity = reference.owner();
 					if (entity instanceof EntityPlayer) {
-						reference.replace(reference.get().onFoodEaten(entity.worldObj, (EntityPlayer) entity));
+						EntityPlayer player = (EntityPlayer) entity;
+						reference.get().replace(reference.get().stack().onFoodEaten(player.worldObj, player));
 						return null;
 					} else {
 						throw new LuaException("Not a player");
@@ -88,7 +89,7 @@ public class Providers extends Module {
 		}
 	}
 
-	private static class ConsumableMeta extends DefaultProvider<ItemStack, Map<String, Object>> {
+	private static class ConsumableMeta extends AbstractProvider<ItemStack, Map<String, Object>> {
 		@Override
 		public Map<String, Object> get(ItemStack stack) {
 			Item item = stack.getItem();
@@ -135,9 +136,9 @@ public class Providers extends Module {
 	}
 
 	private static final class BasicObject implements ILuaObject {
-		private final ItemReference item;
+		private final IReference<IInventorySlot> item;
 
-		private BasicObject(ItemReference item) {
+		private BasicObject(IReference<IInventorySlot> item) {
 			this.item = item;
 		}
 
@@ -152,7 +153,7 @@ public class Providers extends Module {
 		public Object[] callMethod(ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
 			switch (method) {
 				case 0:
-					return new Object[]{IWasBoredAPI.instance().coreRegistry().getItemMetadata(item.get())};
+					return new Object[]{IWasBoredAPI.instance().coreRegistry().getItemMetadata(item.get().stack())};
 			}
 			return null;
 		}

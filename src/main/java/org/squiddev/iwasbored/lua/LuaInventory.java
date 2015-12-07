@@ -6,25 +6,35 @@ import dan200.computercraft.api.lua.LuaException;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import org.squiddev.iwasbored.api.IWasBoredAPI;
-import org.squiddev.iwasbored.api.reference.ItemReference;
+import org.squiddev.iwasbored.api.reference.IInventorySlot;
+import org.squiddev.iwasbored.api.reference.IReference;
 import org.squiddev.iwasbored.inventory.InventoryUtils;
-import org.squiddev.iwasbored.inventory.SingleItem;
+import org.squiddev.iwasbored.lua.reference.EntityReference;
+import org.squiddev.iwasbored.lua.reference.SlotReference;
+import org.squiddev.iwasbored.lua.reference.TileEntityReference;
 
 import java.util.HashMap;
 
 public class LuaInventory implements ILuaObject {
-	private final EntityLivingBase entity;
-	private final IInventory inventory;
+	private final IReference<IInventory> inventory;
 	private final int size;
 	private final int offset;
 
-	public LuaInventory(EntityLivingBase entity, IInventory inventory) {
-		this(entity, inventory, 0, inventory.getSizeInventory());
+	public LuaInventory(IInventory inventory, EntityLivingBase entity) {
+		this(new EntityReference<IInventory>(inventory, entity));
 	}
 
-	public LuaInventory(EntityLivingBase entity, IInventory inventory, int offset, int size) {
-		this.entity = entity;
+	public LuaInventory(IInventory inventory, TileEntity te) {
+		this(new TileEntityReference<IInventory>(inventory, te));
+	}
+
+	public LuaInventory(IReference<IInventory> inventory) {
+		this(inventory, 0, inventory.get().getSizeInventory());
+	}
+
+	public LuaInventory(IReference<IInventory> inventory, int offset, int size) {
 		this.inventory = inventory;
 		this.size = size;
 		this.offset = offset;
@@ -44,6 +54,7 @@ public class LuaInventory implements ILuaObject {
 		switch (method) {
 			case 0: { // list
 				HashMap<Integer, Object> items = new HashMap<Integer, Object>();
+				IInventory inventory = this.inventory.get();
 				for (int i = 0; i < size; i++) {
 					ItemStack stack = inventory.getStackInSlot(i + offset);
 					if (stack != null) {
@@ -58,16 +69,10 @@ public class LuaInventory implements ILuaObject {
 				int slot = ((Number) args[0]).intValue();
 				if (slot < 1 || slot > size) throw new LuaException("Slot out of range");
 
-				SingleItem item = new SingleItem(inventory, slot - 1, entity);
-
-
-				if (item.isValid()) {
-					return new Object[]{
-						new LuaReference<ItemStack>(IWasBoredAPI.instance().coreRegistry().getObjectMethods(item, ItemReference.class), item, "Item is no longer there")
-					};
-				}
-
-				return null;
+				SlotReference item = new SlotReference(inventory, slot - 1);
+				return new Object[]{
+					new LuaReference<IInventorySlot>(IWasBoredAPI.instance().coreRegistry().getObjectMethods(item, IInventorySlot.class), item, "Item is no longer there")
+				};
 			}
 
 			case 2: // getSize

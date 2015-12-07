@@ -2,6 +2,7 @@ package org.squiddev.iwasbored.api.provider;
 
 import dan200.computercraft.api.lua.ILuaObject;
 import net.minecraft.item.ItemStack;
+import org.squiddev.iwasbored.api.reference.IReference;
 
 import java.util.Map;
 
@@ -22,21 +23,18 @@ public interface IProviderRegistry {
 	Map<String, Object> getItemMetadata(ItemStack stack);
 
 	/**
-	 * Add a method provider for an object
+	 * Add a method provider for an object.
+	 *
+	 * Most of the time you can register as the standard class or interface
+	 * (such as {@link net.minecraft.inventory.IInventory} or {@link net.minecraft.entity.Entity}).
+	 *
+	 * For items though you should register with {@link org.squiddev.iwasbored.api.reference.IInventorySlot}.
 	 *
 	 * @param provider The provider
 	 * @param target   The class this provider targets. This can be an interface.
 	 * @param <T>      The type this provider targets
 	 */
-	<T> void registerMethodProvider(IProvider<T, ILuaObject> provider, Class<T> target);
-
-	/**
-	 * Get all methods for an object
-	 *
-	 * @param object The object to provide methods for
-	 * @return All methods provided
-	 */
-	<T> Iterable<ILuaObject> getObjectMethods(T object);
+	<T> void registerMethodProvider(IProvider<IReference<T>, ILuaObject> provider, Class<T> target);
 
 	/**
 	 * Get all methods for an object
@@ -45,5 +43,5 @@ public interface IProviderRegistry {
 	 * @param target The target class. This should be faster than the above method, an resolves interface ambiguities.
 	 * @return All methods provided
 	 */
-	<T> Iterable<ILuaObject> getObjectMethods(T object, Class<T> target);
+	<T> Iterable<ILuaObject> getObjectMethods(IReference<T> object, Class<T> target);
 }

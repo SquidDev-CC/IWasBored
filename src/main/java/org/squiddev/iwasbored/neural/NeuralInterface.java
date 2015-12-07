@@ -8,6 +8,7 @@ import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.core.apis.ILuaAPI;
 import dan200.computercraft.shared.computer.core.ServerComputer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import org.squiddev.iwasbored.DebugLogger;
@@ -16,8 +17,10 @@ import org.squiddev.iwasbored.api.neural.INeuralInterface;
 import org.squiddev.iwasbored.api.neural.INeuralRegistry;
 import org.squiddev.iwasbored.api.neural.INeuralUpgrade;
 import org.squiddev.iwasbored.computer.ServerComputerManager;
-import org.squiddev.iwasbored.lua.LuaInventory;
+import org.squiddev.iwasbored.inventory.InventoryProxy;
 import org.squiddev.iwasbored.lua.LuaObjectCollection;
+import org.squiddev.iwasbored.lua.LuaReference;
+import org.squiddev.iwasbored.lua.reference.EntityReference;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -194,7 +197,6 @@ public class NeuralInterface extends ServerComputerManager implements INeuralInt
 	//endregion
 
 	private class CoreObject implements ILuaObject {
-
 		@Override
 		public String[] getMethodNames() {
 			return new String[]{
@@ -210,11 +212,12 @@ public class NeuralInterface extends ServerComputerManager implements INeuralInt
 			switch (method) {
 				case 0:
 					// TODO: Implements bounds on these
-					return new Object[]{new LuaInventory(player, player.inventory, 0, 9 * 4)};
+					return new Object[]{new LuaReference<IInventory>(new EntityReference<IInventory>(new InventoryProxy(player.inventory, 0, 9 * 4), player), IInventory.class)}
+						;
 				case 1:
-					return new Object[]{new LuaInventory(player, player.inventory, 9 * 4, 4)};
+					return new Object[]{new LuaReference<IInventory>(new EntityReference<IInventory>(new InventoryProxy(player.inventory, 9 * 4, 4), player), IInventory.class)};
 				case 2:
-					return new Object[]{new LuaInventory(player, PlayerHandler.getPlayerBaubles(player))};
+					return new Object[]{new LuaReference<IInventory>(new EntityReference<IInventory>(PlayerHandler.getPlayerBaubles(player), player), IInventory.class)};
 				case 3: {
 					HashMap<Integer, String> results = new HashMap<Integer, String>();
 					int i = 0;

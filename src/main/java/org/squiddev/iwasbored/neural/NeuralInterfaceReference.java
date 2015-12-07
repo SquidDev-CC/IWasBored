@@ -4,32 +4,38 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import org.squiddev.iwasbored.api.neural.INeuralInterface;
 import org.squiddev.iwasbored.api.neural.INeuralReference;
-import org.squiddev.iwasbored.inventory.SingleItem;
+import org.squiddev.iwasbored.api.reference.IInventorySlot;
+import org.squiddev.iwasbored.api.reference.IReference;
 import org.squiddev.iwasbored.items.ItemUtils;
 
 public class NeuralInterfaceReference implements INeuralReference {
-	private final SingleItem item;
+	private final IReference<IInventorySlot> item;
 
-	public NeuralInterfaceReference(SingleItem item) {
+	public NeuralInterfaceReference(IReference<IInventorySlot> item) {
 		this.item = item;
 	}
 
 	@Override
 	public boolean isValid() {
-		return item.isValid();
+		return item.isValid() && item.owner() instanceof EntityPlayer;
 	}
 
 	@Override
 	public INeuralInterface get() {
-		if (item.isValid() && item.getEntity() instanceof EntityPlayer) {
-			return NeuralManager.get(ItemUtils.getTag(item.get()), (EntityPlayer) item.getEntity());
-		} else {
-			return null;
+		if (isValid()) {
+			return NeuralManager.get(ItemUtils.getTag(item.get().stack()), (EntityPlayer) item.owner());
 		}
+
+		return null;
+	}
+
+	@Override
+	public Object owner() {
+		return item.owner();
 	}
 
 	@Override
 	public NBTTagCompound getTag() {
-		return item.isValid() ? ItemUtils.getTag(item.get()) : null;
+		return isValid() ? ItemUtils.getTag(item.get().stack()) : null;
 	}
 }

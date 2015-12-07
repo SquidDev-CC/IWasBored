@@ -4,15 +4,29 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
 /**
- * Reference to a item
+ * A slot in the inventory
  */
-public interface ItemReference extends IReferenceWithEntity<ItemStack> {
+public interface IInventorySlot {
+	/**
+	 * Get the slot this item exists in
+	 *
+	 * @return The slot this item exists in
+	 */
+	int slot();
+
+	/**
+	 * The item stack at this slot.
+	 *
+	 * @return The item stack at this slot.
+	 */
+	ItemStack stack();
+
 	/**
 	 * Get the inventory that this item refers to
 	 *
 	 * @return The inventory
 	 */
-	IInventory getInventory();
+	IReference<IInventory> inventory();
 
 	/**
 	 * Replace this item with another item
