@@ -1,8 +1,8 @@
 package org.squiddev.iwasbored;
 
-import cpw.mods.fml.common.network.IGuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.IGuiHandler;
 import org.squiddev.iwasbored.api.IWasBoredAPI;
 import org.squiddev.iwasbored.api.neural.INeuralReference;
 import org.squiddev.iwasbored.client.gui.GuiNeuralInterface;

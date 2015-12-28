@@ -1,10 +1,9 @@
 package org.squiddev.iwasbored.registry;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.squiddev.iwasbored.client.render.RenderModelInterface;
 import org.squiddev.iwasbored.integration.BaublesIntegration;
-import org.squiddev.iwasbored.integration.openperipheral.OpenPeripheralIntegration;
 import org.squiddev.iwasbored.items.ItemNeuralConnector;
 import org.squiddev.iwasbored.items.ItemNeuralInterface;
 import org.squiddev.iwasbored.lua.Providers;
@@ -37,7 +36,6 @@ public final class Registry {
 		addModule(new ArmorProvider());
 
 		// Integration
-		addModule(new OpenPeripheralIntegration());
 		addModule(new BaublesIntegration());
 	}
 

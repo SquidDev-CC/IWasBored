@@ -1,0 +1,6 @@
+{
+	"parent": "iwasbored:item/flat",
+	"textures": {
+		"layer0": "iwasbored:items/neuralConnector"
+	}
+}

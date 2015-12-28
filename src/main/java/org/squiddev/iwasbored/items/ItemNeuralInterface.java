@@ -2,8 +2,6 @@ package org.squiddev.iwasbored.items;
 
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -12,25 +10,31 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.squiddev.iwasbored.IWasBored;
 import org.squiddev.iwasbored.client.model.ModelInterface;
 import org.squiddev.iwasbored.neural.NeuralInterface;
 import org.squiddev.iwasbored.neural.NeuralManager;
-import org.squiddev.iwasbored.registry.IModule;
+import org.squiddev.iwasbored.registry.IClientModule;
+import org.squiddev.iwasbored.utils.Helpers;
 
 @Optional.Interface(iface = "baubles.api.IBauble", modid = "Baubles")
-public class ItemNeuralInterface extends ItemArmor implements IBauble, ISpecialArmor, IModule {
-	private static final ArmorMaterial FAKE_ARMOUR = EnumHelper.addArmorMaterial("FAKE_ARMOUR", 33, new int[]{0, 0, 0, 0}, 0);
+public class ItemNeuralInterface extends ItemArmor implements IBauble, ISpecialArmor, IClientModule {
+	private static final ArmorMaterial FAKE_ARMOUR = EnumHelper.addArmorMaterial("FAKE_ARMOUR", "iwasbored_fake", 33, new int[]{0, 0, 0, 0}, 0);
 	private static final ArmorProperties FAKE_PROPERTIES = new ArmorProperties(0, 0, 0);
 	private static final String NAME = "neuralInterface";
+
+	public static final String RESOURCE_PATH = IWasBored.PREFIX_TEXTURES + "items/neuralInterface.png";
+	public static final ResourceLocation RESOURCE_LOCATION = new ResourceLocation(IWasBored.RESOURCE_DOMAIN, "textures/items/neuralInterface.png");
 
 	public ItemNeuralInterface() {
 		super(FAKE_ARMOUR, 0, 0);
 		this.setUnlocalizedName(IWasBored.RESOURCE_DOMAIN + "." + NAME);
-		this.setTextureName(IWasBored.RESOURCE_DOMAIN + ":" + NAME);
 		this.setCreativeTab(IWasBored.getCreativeTab());
 	}
 
@@ -109,12 +113,10 @@ public class ItemNeuralInterface extends ItemArmor implements IBauble, ISpecialA
 		return super.getArmorModel(entityLiving, itemStack, armorSlot);
 	}
 
+
 	@Override
 	public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type) {
-		if (slot == 0) {
-			return IWasBored.PREFIX_MODELS + "neuralInterface.png";
-		}
-		return super.getArmorTexture(stack, entity, slot, type);
+		return RESOURCE_PATH;
 	}
 
 	@Override
@@ -147,7 +149,7 @@ public class ItemNeuralInterface extends ItemArmor implements IBauble, ISpecialA
 				neuralInterface.toNBT(tag);
 				String label = tag.getString("label");
 				if (label == null || label.isEmpty()) {
-					stack.func_135074_t();
+					stack.clearCustomName();
 				} else {
 					stack.setStackDisplayName(label);
 				}
@@ -174,6 +176,11 @@ public class ItemNeuralInterface extends ItemArmor implements IBauble, ISpecialA
 
 	@Override
 	public void postInit() {
+	}
+
+	@Override
+	public void clientInit() {
+		Helpers.setupModel(this, 0, NAME);
 	}
 	//endregion
 }

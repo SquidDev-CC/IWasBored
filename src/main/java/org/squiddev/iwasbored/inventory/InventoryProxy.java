@@ -3,6 +3,7 @@ package org.squiddev.iwasbored.inventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IChatComponent;
 
 public class InventoryProxy implements IInventory {
 	private final IInventory inventory;
@@ -41,14 +42,20 @@ public class InventoryProxy implements IInventory {
 	}
 
 	@Override
-	public String getInventoryName() {
-		return inventory.getInventoryName();
+	public String getName() {
+		return inventory.getName();
 	}
 
 	@Override
-	public boolean hasCustomInventoryName() {
-		return inventory.hasCustomInventoryName();
+	public boolean hasCustomName() {
+		return inventory.hasCustomName();
 	}
+
+	@Override
+	public IChatComponent getDisplayName() {
+		return inventory.getDisplayName();
+	}
+
 
 	@Override
 	public int getInventoryStackLimit() {
@@ -66,17 +73,39 @@ public class InventoryProxy implements IInventory {
 	}
 
 	@Override
-	public void openInventory() {
-		inventory.openInventory();
+	public void openInventory(EntityPlayer player) {
+		inventory.openInventory(player);
 	}
 
 	@Override
-	public void closeInventory() {
-		inventory.closeInventory();
+	public void closeInventory(EntityPlayer player) {
+		inventory.closeInventory(player);
 	}
 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
-		return inventory.isItemValidForSlot(slot, stack);
+		return inventory.isItemValidForSlot(start + slot, stack);
+	}
+
+	@Override
+	public int getField(int id) {
+		return inventory.getField(id);
+	}
+
+	@Override
+	public void setField(int id, int value) {
+		inventory.setField(id, value);
+	}
+
+	@Override
+	public int getFieldCount() {
+		return inventory.getFieldCount();
+	}
+
+	@Override
+	public void clear() {
+		for (int i = 0; i < size; i++) {
+			inventory.setInventorySlotContents(i + start, null);
+		}
 	}
 }

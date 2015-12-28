@@ -1,13 +1,13 @@
 package org.squiddev.iwasbored;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.event.*;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
 import dan200.computercraft.ComputerCraft;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import org.squiddev.iwasbored.neural.NeuralManager;
 import org.squiddev.iwasbored.registry.Registry;
 
@@ -17,10 +17,10 @@ public class IWasBored {
 	public static final String NAME = ID;
 	public static final String VERSION = "@mod_version@";
 	public static final String RESOURCE_DOMAIN = "iwasbored";
-	public static final String DEPENDENCIES = "required-after:ComputerCraft@[1.74,);after:CCTurtle;after:CCTweaks";
+	public static final String DEPENDENCIES = "required-after:ComputerCraft@[1.76,);after:CCTurtle;after:CCTweaks";
 
 	public static final String PREFIX_MOD = RESOURCE_DOMAIN + ":";
-	public static final String PREFIX_MODELS = PREFIX_MOD + "textures/model/";
+	public static final String PREFIX_TEXTURES = PREFIX_MOD + "textures/";
 
 	@Mod.Instance
 	public static IWasBored instance;

@@ -1,6 +1,6 @@
 package org.squiddev.iwasbored.integration;
 
-import cpw.mods.fml.common.Loader;
+import net.minecraftforge.fml.common.Loader;
 import org.squiddev.iwasbored.registry.Module;
 
 public abstract class ModIntegration extends Module {

@@ -19,8 +19,8 @@ public class TileEntityReference<T> extends AbstractReference<T> {
 		TileEntity entity = te.get();
 		if (entity == null || entity.isInvalid()) return false;
 
-		World world = entity.getWorldObj();
-		return world != null && entity.equals(world.getTileEntity(entity.xCoord, entity.yCoord, entity.zCoord));
+		World world = entity.getWorld();
+		return world != null && entity.equals(world.getTileEntity(entity.getPos()));
 	}
 
 	@Override

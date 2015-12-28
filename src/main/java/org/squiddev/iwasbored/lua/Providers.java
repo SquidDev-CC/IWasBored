@@ -40,7 +40,7 @@ public class Providers extends Module {
 				ItemStack stack = reference.get().stack();
 				if (stack != null && reference.owner() != null) {
 					EnumAction action = stack.getItemUseAction();
-					if (action == EnumAction.eat || action == EnumAction.drink) {
+					if (action == EnumAction.EAT || action == EnumAction.DRINK) {
 						return new ConsumableObject(reference);
 					}
 				}
@@ -78,7 +78,7 @@ public class Providers extends Module {
 					Object entity = reference.owner();
 					if (entity instanceof EntityPlayer) {
 						EntityPlayer player = (EntityPlayer) entity;
-						reference.get().replace(reference.get().stack().onFoodEaten(player.worldObj, player));
+						reference.get().replace(reference.get().stack().onItemUseFinish(player.worldObj, player));
 						return null;
 					} else {
 						throw new LuaException("Not a player");
@@ -97,8 +97,8 @@ public class Providers extends Module {
 
 			if (item instanceof ItemFood) {
 				ItemFood food = (ItemFood) item;
-				data.put("heal", food.func_150905_g(stack));
-				data.put("saturation", food.func_150906_h(stack));
+				data.put("heal", food.getHealAmount(stack));
+				data.put("saturation", food.getSaturationModifier(stack));
 			} else if (item instanceof ItemPotion) {
 				ItemPotion itemPotion = (ItemPotion) item;
 

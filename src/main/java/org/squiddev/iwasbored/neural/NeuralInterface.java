@@ -139,7 +139,7 @@ public class NeuralInterface extends ServerComputerManager implements INeuralInt
 		NBTTagCompound upgrades = compound.getCompoundTag("upgrades");
 		if (upgrades != null) {
 			INeuralRegistry registry = IWasBoredAPI.instance().neuralRegistry();
-			for (Object key : upgrades.func_150296_c()) {
+			for (Object key : upgrades.getKeySet()) {
 				if (key instanceof String) {
 					String name = (String) key;
 					NBTTagCompound tag = upgrades.getCompoundTag(name);

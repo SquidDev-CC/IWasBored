@@ -1,21 +1,6 @@
-buildscript {
-	repositories {
-		mavenCentral()
-		maven {
-			name = "forge"
-			url = "http://files.minecraftforge.net/maven"
-		}
-		maven {
-			name = "sonatype"
-			url = "https://oss.sonatype.org/content/repositories/snapshots/"
-		}
-	}
-	dependencies {
-		classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
-	}
+plugins {
+	id "net.minecraftforge.gradle.forge" version "2.0.2"
 }
-
-apply plugin: 'forge'
 apply from: 'gradle/scripts/dependencies.gradle'
 
 group = "org.squiddev"
@@ -24,10 +9,11 @@ version = mc_version + "-" + mod_version
 
 minecraft {
 	version = project.mc_version + "-" + project.forge_version
-	runDir = "eclipse"
+	runDir = "run-${project.mc_version}"
 
 	replace '${mod_version}', project.mod_version
 	replace '${mc_version}', project.mc_version
+	mappings = "snapshot_20141130"
 }
 
 processResources {
