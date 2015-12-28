@@ -25,6 +25,9 @@ public interface IProviderRegistry {
 	/**
 	 * Add a method provider for an object.
 	 *
+	 * You should only need to check if the reference is valid if there has been some delay since calling: the parent
+	 * wrapper will check for this otherwise.
+	 *
 	 * Most of the time you can register as the standard class or interface
 	 * (such as {@link net.minecraft.inventory.IInventory} or {@link net.minecraft.entity.Entity}).
 	 *
