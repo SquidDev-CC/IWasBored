@@ -6,6 +6,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import org.squiddev.iwasbored.API;
 import org.squiddev.iwasbored.api.neural.*;
 import org.squiddev.iwasbored.api.provider.IProvider;
@@ -18,7 +19,7 @@ import java.util.Map;
 
 public class NeuralRegistry implements INeuralRegistry {
 	private List<INeuralUpgradeProvider> generics = new ArrayList<INeuralUpgradeProvider>();
-	private Map<String, INeuralUpgradeProvider> stringLookup = new HashMap<String, INeuralUpgradeProvider>();
+	private Map<ResourceLocation, INeuralUpgradeProvider> idLookup = new HashMap<ResourceLocation, INeuralUpgradeProvider>();
 	private Map<Item, INeuralUpgradeProvider> itemLookup = new HashMap<Item, INeuralUpgradeProvider>();
 
 	private SortedCollection<IProvider<EntityLivingBase, INeuralReference>> neuralProvider = new SortedCollection<IProvider<EntityLivingBase, INeuralReference>>(API.providerComparer);
@@ -32,38 +33,38 @@ public class NeuralRegistry implements INeuralRegistry {
 	}
 
 	@Override
-	public void registerNeuralUpgrade(INeuralUpgradeProvider provider, String name, Item item) {
+	public void registerNeuralUpgrade(INeuralUpgradeProvider provider, ResourceLocation id, Item item) {
 		Preconditions.checkNotNull(provider, "factory cannot be null");
-		Preconditions.checkNotNull(name, "name cannot be null");
+		Preconditions.checkNotNull(id, "name cannot be null");
 		Preconditions.checkNotNull(item, "item cannot be null");
 
-		if (stringLookup.containsKey(name)) {
-			throw new IllegalArgumentException(name + " already exists, registered by " + stringLookup.get(name));
+		if (idLookup.containsKey(id)) {
+			throw new IllegalArgumentException(id + " already exists, registered by " + idLookup.get(id));
 		}
 
 		if (itemLookup.containsKey(item)) {
 			throw new IllegalArgumentException(item + " already exists, registered by " + itemLookup.get(item));
 		}
 
-		stringLookup.put(name, provider);
+		idLookup.put(id, provider);
 		itemLookup.put(item, provider);
 	}
 
 	@Override
-	public INeuralUpgrade create(String name, NBTTagCompound tag) {
-		Preconditions.checkNotNull(name, "name cannot be null");
+	public INeuralUpgrade create(ResourceLocation id, NBTTagCompound tag) {
+		Preconditions.checkNotNull(id, "id cannot be null");
 		Preconditions.checkNotNull(tag, "tag cannot be null");
 
 		{
-			INeuralUpgradeProvider factory = stringLookup.get(name);
+			INeuralUpgradeProvider factory = idLookup.get(id);
 			if (factory != null) {
-				INeuralUpgrade upgrade = factory.create(name, tag);
+				INeuralUpgrade upgrade = factory.create(id, tag);
 				if (upgrade != null) return upgrade;
 			}
 		}
 
 		for (INeuralUpgradeProvider factory : generics) {
-			INeuralUpgrade upgrade = factory.create(name, tag);
+			INeuralUpgrade upgrade = factory.create(id, tag);
 			if (upgrade != null) return upgrade;
 		}
 

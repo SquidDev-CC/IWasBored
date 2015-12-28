@@ -1,26 +1,23 @@
 package org.squiddev.iwasbored.neural;
 
-import baubles.common.lib.PlayerHandler;
-import com.google.common.collect.Iterables;
+import com.google.common.base.Preconditions;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.ILuaObject;
 import dan200.computercraft.api.lua.LuaException;
+import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.core.apis.ILuaAPI;
 import dan200.computercraft.shared.computer.core.ServerComputer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import org.squiddev.iwasbored.DebugLogger;
 import org.squiddev.iwasbored.api.IWasBoredAPI;
 import org.squiddev.iwasbored.api.neural.INeuralInterface;
 import org.squiddev.iwasbored.api.neural.INeuralRegistry;
 import org.squiddev.iwasbored.api.neural.INeuralUpgrade;
-import org.squiddev.iwasbored.computer.ServerComputerManager;
-import org.squiddev.iwasbored.inventory.InventoryProxy;
-import org.squiddev.iwasbored.lua.LuaObjectCollection;
-import org.squiddev.iwasbored.lua.LuaReference;
-import org.squiddev.iwasbored.lua.reference.EntityReference;
+import org.squiddev.iwasbored.impl.provider.LuaObjectCollection;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,8 +27,8 @@ public class NeuralInterface extends ServerComputerManager implements INeuralInt
 	public static final String SESSION_ID = "session_id";
 	public static final String INSTANCE_ID = "instance_id";
 
-	private final HashMap<String, INeuralUpgrade> upgrades = new HashMap<String, INeuralUpgrade>();
-	private final HashMap<String, ILuaObject> upgradeObjects = new HashMap<String, ILuaObject>();
+	private final HashMap<EnumFacing, INeuralUpgrade> upgrades = new HashMap<EnumFacing, INeuralUpgrade>();
+	private final HashMap<EnumFacing, IPeripheral> upgradeObjects = new HashMap<EnumFacing, IPeripheral>();
 	private final ILuaObject apiMethods;
 
 	public final EntityPlayer player;
@@ -46,10 +43,7 @@ public class NeuralInterface extends ServerComputerManager implements INeuralInt
 		fromNBT(tagCompound);
 		turnOn();
 
-		apiMethods = new LuaObjectCollection(Iterables.concat(
-			Collections.singleton(new CoreObject()),
-			IWasBoredAPI.instance().neuralRegistry().getLua(this)
-		));
+		apiMethods = new LuaObjectCollection(IWasBoredAPI.instance().neuralRegistry().getLua(this));
 	}
 
 	//region INeuralInterface
@@ -59,18 +53,28 @@ public class NeuralInterface extends ServerComputerManager implements INeuralInt
 	}
 
 	@Override
-	public Map<String, INeuralUpgrade> getUpgrades() {
+	public Map<EnumFacing, INeuralUpgrade> getUpgrades() {
 		return Collections.unmodifiableMap(upgrades);
 	}
 
 	@Override
-	public boolean addUpgrade(INeuralUpgrade upgrade) {
-		String name = upgrade.getName();
-		synchronized (upgrades) {
-			if (upgrades.containsKey(name)) return false;
+	public INeuralUpgrade getUpgrade(EnumFacing direction) {
+		Preconditions.checkNotNull(direction, "direction cannot be null");
+		if (direction == EnumFacing.UP) throw new IllegalArgumentException("direction cannot be EnumFacing.UP");
+		return upgrades.get(direction);
+	}
 
-			upgrades.put(name, upgrade);
-			upgradeObjects.put(name, upgrade.getLuaObject());
+	@Override
+	public boolean addUpgrade(EnumFacing direction, INeuralUpgrade upgrade) {
+		Preconditions.checkNotNull(direction, "direction cannot be null");
+		Preconditions.checkNotNull(upgrade, "upgrade cannot be null");
+		if (direction == EnumFacing.UP) throw new IllegalArgumentException("direction cannot be EnumFacing.UP");
+
+		synchronized (upgrades) {
+			if (upgrades.containsKey(direction)) return false;
+
+			upgrades.put(direction, upgrade);
+			upgradeObjects.put(direction, upgrade.getLuaObject());
 			dirty = true;
 
 			if (getComputer().isOn()) upgrade.attach(this);
@@ -80,15 +84,17 @@ public class NeuralInterface extends ServerComputerManager implements INeuralInt
 	}
 
 	@Override
-	public boolean removeUpgrade(INeuralUpgrade upgrade) {
-		String name = upgrade.getName();
+	public boolean removeUpgrade(EnumFacing direction) {
+		Preconditions.checkNotNull(direction, "direction cannot be null");
+		if (direction == EnumFacing.UP) throw new IllegalArgumentException("direction cannot be EnumFacing.UP");
+
 		synchronized (upgrades) {
-			if (upgrades.get(name) == upgrade) {
-				upgrades.remove(name);
-				upgradeObjects.remove(name);
+			INeuralUpgrade upgrade = upgrades.remove(direction);
+			if (upgrade != null) {
+				upgradeObjects.remove(direction);
 				dirty = true;
 
-				if (getComputer().isOn()) upgrade.attach(this);
+				if (getComputer().isOn()) upgrade.detach();
 
 				return true;
 			}
@@ -109,6 +115,11 @@ public class NeuralInterface extends ServerComputerManager implements INeuralInt
 		ServerComputer computer = super.createComputer(instanceId, computerId, label);
 		computer.addAPI(this);
 
+		// TODO: Wrap this as peripheral
+		for (Map.Entry<EnumFacing, IPeripheral> upgrade : upgradeObjects.entrySet()) {
+			computer.setPeripheral(upgrade.getKey().ordinal(), upgrade.getValue());
+		}
+
 		return computer;
 	}
 
@@ -124,8 +135,13 @@ public class NeuralInterface extends ServerComputerManager implements INeuralInt
 		tag.setInteger(SESSION_ID, sessionId);
 
 		NBTTagCompound upgradeLookup = new NBTTagCompound();
-		for (Map.Entry<String, INeuralUpgrade> upgrade : upgrades.entrySet()) {
-			upgradeLookup.setTag(upgrade.getKey(), upgrade.getValue().toNBT());
+		for (Map.Entry<EnumFacing, INeuralUpgrade> pair : upgrades.entrySet()) {
+			NBTTagCompound data = new NBTTagCompound();
+			INeuralUpgrade upgrade = pair.getValue();
+			data.setString("key", upgrade.getName().toString());
+			data.setTag("data", upgrade.toNBT());
+
+			upgradeLookup.setTag(pair.getKey().getName(), data);
 		}
 		tag.setTag("upgrades", upgradeLookup);
 	}
@@ -141,15 +157,26 @@ public class NeuralInterface extends ServerComputerManager implements INeuralInt
 			INeuralRegistry registry = IWasBoredAPI.instance().neuralRegistry();
 			for (Object key : upgrades.getKeySet()) {
 				if (key instanceof String) {
-					String name = (String) key;
-					NBTTagCompound tag = upgrades.getCompoundTag(name);
+					String directionName = (String) key;
+					EnumFacing direction = EnumFacing.byName(directionName);
+					if (direction == null) {
+						DebugLogger.error("Unknown direction %s, ignoring", directionName);
+						continue;
+					} else if (direction == EnumFacing.UP) {
+						DebugLogger.error("Cannot load UP, ignoring", directionName);
+						continue;
+					}
+
+					NBTTagCompound tag = upgrades.getCompoundTag(directionName);
 					if (tag == null) continue;
 
-					INeuralUpgrade upgrade = registry.create(name, tag);
+					ResourceLocation name = new ResourceLocation(tag.getString("key"));
+
+					INeuralUpgrade upgrade = registry.create(name, tag.getCompoundTag("data"));
 					if (upgrade == null) {
 						DebugLogger.error("Cannot load Neural Upgrade with name %s (tag = %s)", name, tag);
 					} else {
-						addUpgrade(upgrade);
+						addUpgrade(direction, upgrade);
 					}
 				}
 			}
@@ -196,48 +223,4 @@ public class NeuralInterface extends ServerComputerManager implements INeuralInt
 	}
 	//endregion
 
-	private class CoreObject implements ILuaObject {
-		@Override
-		public String[] getMethodNames() {
-			return new String[]{
-				"getInventory",
-				"getArmor",
-				"getUpgradeNames",
-				"getUpgrade",
-			};
-		}
-
-		@Override
-		public Object[] callMethod(ILuaContext context, int method, Object[] args) throws LuaException, InterruptedException {
-			switch (method) {
-				case 0:
-					// TODO: Implements bounds on these
-					return new Object[]{new LuaReference<IInventory>(new EntityReference<IInventory>(new InventoryProxy(player.inventory, 0, 9 * 4), player), IInventory.class)}
-						;
-				case 1:
-					return new Object[]{new LuaReference<IInventory>(new EntityReference<IInventory>(new InventoryProxy(player.inventory, 9 * 4, 4), player), IInventory.class)};
-				case 2:
-					return new Object[]{new LuaReference<IInventory>(new EntityReference<IInventory>(PlayerHandler.getPlayerBaubles(player), player), IInventory.class)};
-				case 3: {
-					HashMap<Integer, String> results = new HashMap<Integer, String>();
-					int i = 0;
-					for (String name : upgradeObjects.keySet()) {
-						results.put(i, name);
-					}
-
-					return new Object[]{results};
-				}
-				case 4: {
-					if (args.length == 0 || !(args[0] instanceof String)) throw new LuaException("Expected string");
-					ILuaObject object = upgradeObjects.get((String) args[0]);
-
-					if (object == null) throw new LuaException("No such upgrade");
-
-					return new Object[]{object};
-				}
-			}
-
-			return null;
-		}
-	}
 }

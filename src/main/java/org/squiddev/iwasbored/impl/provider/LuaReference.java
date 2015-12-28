@@ -1,4 +1,4 @@
-package org.squiddev.iwasbored.lua;
+package org.squiddev.iwasbored.impl.provider;
 
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.ILuaObject;

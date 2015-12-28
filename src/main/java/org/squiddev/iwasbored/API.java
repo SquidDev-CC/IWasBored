@@ -8,7 +8,6 @@ import org.squiddev.iwasbored.api.neural.INeuralRegistry;
 import org.squiddev.iwasbored.api.provider.IProvider;
 import org.squiddev.iwasbored.api.provider.IProviderRegistry;
 import org.squiddev.iwasbored.api.reference.IReference;
-import org.squiddev.iwasbored.inventory.InventoryUtils;
 import org.squiddev.iwasbored.neural.NeuralRegistry;
 import org.squiddev.iwasbored.utils.SortedCollection;
 
@@ -50,7 +49,7 @@ public class API implements IIWasBoredAPI {
 		public Map<String, Object> getItemMetadata(ItemStack stack) {
 			Preconditions.checkNotNull(stack, "stack cannot be null");
 
-			Map<String, Object> data = InventoryUtils.getBasicProperties(stack);
+			Map<String, Object> data = new HashMap<String, Object>();
 
 			for (IProvider<ItemStack, Map<String, Object>> provider : metaProviders) {
 				Map<String, Object> subData = provider.get(stack);

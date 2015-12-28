@@ -12,7 +12,8 @@ public interface IReference<T> {
 	boolean isValid();
 
 	/**
-	 * Get the value
+	 * Get the value.
+	 * Whilst the reference is valid, it should always be the same object.
 	 *
 	 * @return The value. This will be {@code null} if the target is no longer valid.
 	 */
@@ -20,6 +21,7 @@ public interface IReference<T> {
 
 	/**
 	 * The owner of this reference. This will probably be a tile entity or a entity.
+	 * Whilst the reference is valid, it should always be the same object.
 	 *
 	 * @return The owner of this reference. This may be {@code null}.
 	 */

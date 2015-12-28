@@ -1,15 +1,16 @@
 package org.squiddev.iwasbored.api.neural;
 
-import dan200.computercraft.api.lua.ILuaObject;
+import dan200.computercraft.api.peripheral.IPeripheral;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 
 public interface INeuralUpgrade {
 	/**
 	 * Get the Lua Object used to interface with this upgrade
 	 * This is cached by the neural interface so you don't have to.
 	 */
-	ILuaObject getLuaObject();
+	IPeripheral getLuaObject();
 
 	/**
 	 * Called when the computer is turned on.
@@ -30,15 +31,12 @@ public interface INeuralUpgrade {
 	void update();
 
 	/**
-	 * Get the unique name for this type of upgrade:
-	 * A neural interface cannot have more than one type.
+	 * Get the name for this upgrade
 	 */
-	String getName();
+	ResourceLocation getName();
 
 	/**
 	 * Write this upgrade to an NBT compound.
-	 * Ideally upgrades shouldn't need to store state-specific information,
-	 * but just in case.
 	 *
 	 * @return The written tag
 	 */

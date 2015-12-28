@@ -1,4 +1,4 @@
-package org.squiddev.iwasbored.lua.reference;
+package org.squiddev.iwasbored.impl.reference;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;

@@ -1,4 +1,4 @@
-package org.squiddev.iwasbored.computer;
+package org.squiddev.iwasbored.neural;
 
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.shared.computer.core.ComputerFamily;

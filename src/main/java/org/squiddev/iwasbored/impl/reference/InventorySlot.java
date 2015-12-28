@@ -1,4 +1,4 @@
-package org.squiddev.iwasbored.inventory;
+package org.squiddev.iwasbored.impl.reference;
 
 import com.google.common.base.Preconditions;
 import net.minecraft.inventory.IInventory;

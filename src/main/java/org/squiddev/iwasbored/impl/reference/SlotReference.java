@@ -1,11 +1,10 @@
-package org.squiddev.iwasbored.lua.reference;
+package org.squiddev.iwasbored.impl.reference;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import org.squiddev.iwasbored.api.reference.AbstractReference;
 import org.squiddev.iwasbored.api.reference.IInventorySlot;
 import org.squiddev.iwasbored.api.reference.IReference;
-import org.squiddev.iwasbored.inventory.InventorySlot;
 
 public class SlotReference extends AbstractReference<IInventorySlot> {
 	private final ItemStack stack;

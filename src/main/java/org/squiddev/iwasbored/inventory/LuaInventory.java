@@ -1,4 +1,4 @@
-package org.squiddev.iwasbored.lua;
+package org.squiddev.iwasbored.inventory;
 
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.ILuaObject;
@@ -10,10 +10,10 @@ import net.minecraft.tileentity.TileEntity;
 import org.squiddev.iwasbored.api.IWasBoredAPI;
 import org.squiddev.iwasbored.api.reference.IInventorySlot;
 import org.squiddev.iwasbored.api.reference.IReference;
-import org.squiddev.iwasbored.inventory.InventoryUtils;
-import org.squiddev.iwasbored.lua.reference.EntityReference;
-import org.squiddev.iwasbored.lua.reference.SlotReference;
-import org.squiddev.iwasbored.lua.reference.TileEntityReference;
+import org.squiddev.iwasbored.impl.provider.LuaReference;
+import org.squiddev.iwasbored.impl.reference.EntityReference;
+import org.squiddev.iwasbored.impl.reference.SlotReference;
+import org.squiddev.iwasbored.impl.reference.TileEntityReference;
 
 import java.util.HashMap;
 

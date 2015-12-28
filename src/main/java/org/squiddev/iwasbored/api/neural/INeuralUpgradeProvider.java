@@ -3,19 +3,20 @@ package org.squiddev.iwasbored.api.neural;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 
 /**
- * Factory for {@link INeuralUpgrade}. Register with {@link org.squiddev.iwasbored.api.IIWasBoredAPI}.
+ * Factory for {@link INeuralUpgrade}. Register with {@link org.squiddev.iwasbored.api.neural.INeuralRegistry}.
  */
 public interface INeuralUpgradeProvider {
 	/**
-	 * Create an upgrade from a tag and a name
+	 * Create an upgrade from a tag and an id
 	 *
-	 * @param name The name of the upgrade
-	 * @param tag  The tag of the upgrade
+	 * @param id  The id of the upgrade
+	 * @param tag The tag of the upgrade
 	 * @return The upgrade, or null if none can be created
 	 */
-	INeuralUpgrade create(String name, NBTTagCompound tag);
+	INeuralUpgrade create(ResourceLocation id, NBTTagCompound tag);
 
 	/**
 	 * Create an upgrade from an item stack

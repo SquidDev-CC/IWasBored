@@ -3,11 +3,10 @@ package org.squiddev.iwasbored.registry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.squiddev.iwasbored.client.render.RenderModelInterface;
-import org.squiddev.iwasbored.integration.BaublesIntegration;
+import org.squiddev.iwasbored.integration.baubles.BaublesIntegration;
+import org.squiddev.iwasbored.integration.vanilla.VanillaIntegration;
 import org.squiddev.iwasbored.items.ItemNeuralConnector;
 import org.squiddev.iwasbored.items.ItemNeuralInterface;
-import org.squiddev.iwasbored.lua.Providers;
-import org.squiddev.iwasbored.neural.ArmorProvider;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,11 +30,7 @@ public final class Registry {
 
 		addModule(new RenderModelInterface());
 
-		// Neural interface code
-		addModule(new Providers());
-		addModule(new ArmorProvider());
-
-		// Integration
+		addModule(new VanillaIntegration());
 		addModule(new BaublesIntegration());
 	}
 

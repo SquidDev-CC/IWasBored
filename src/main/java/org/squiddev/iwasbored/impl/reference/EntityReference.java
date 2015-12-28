@@ -1,4 +1,4 @@
-package org.squiddev.iwasbored.lua.reference;
+package org.squiddev.iwasbored.impl.reference;
 
 import com.google.common.base.Preconditions;
 import net.minecraft.entity.EntityLivingBase;

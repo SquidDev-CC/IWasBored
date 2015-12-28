@@ -1,4 +1,4 @@
-package org.squiddev.iwasbored.neural;
+package org.squiddev.iwasbored.impl.neural;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -7,6 +7,7 @@ import org.squiddev.iwasbored.api.neural.INeuralReference;
 import org.squiddev.iwasbored.api.reference.IInventorySlot;
 import org.squiddev.iwasbored.api.reference.IReference;
 import org.squiddev.iwasbored.items.ItemUtils;
+import org.squiddev.iwasbored.neural.NeuralManager;
 
 public class NeuralInterfaceReference implements INeuralReference {
 	private final IReference<IInventorySlot> item;

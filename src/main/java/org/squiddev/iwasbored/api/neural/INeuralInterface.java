@@ -1,6 +1,7 @@
 package org.squiddev.iwasbored.api.neural;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumFacing;
 
 import java.util.Map;
 
@@ -17,23 +18,32 @@ public interface INeuralInterface {
 	 *
 	 * @return All upgrades
 	 */
-	Map<String, INeuralUpgrade> getUpgrades();
+	Map<EnumFacing, INeuralUpgrade> getUpgrades();
 
 	/**
-	 * Add an upgrade to this interface
+	 * Get an upgrade on this interface.
 	 *
-	 * @param upgrade The upgrade to add
-	 * @return If the upgrade was added
+	 * @param direction The direction the upgrade is mounted on. This cannot be {@link EnumFacing#UP}.
+	 * @return The upgrade, or {@code null} if none.
 	 */
-	boolean addUpgrade(INeuralUpgrade upgrade);
+	INeuralUpgrade getUpgrade(EnumFacing direction);
+
+	/**
+	 * Add an upgrade to this interface.
+	 *
+	 * @param direction The direction to mount on. This cannot be {@link EnumFacing#UP}.
+	 * @param upgrade   The upgrade to add
+	 * @return If the upgrade was added (if there is not one there already).
+	 */
+	boolean addUpgrade(EnumFacing direction, INeuralUpgrade upgrade);
 
 	/**
 	 * Remove an upgrade from this interface
 	 *
-	 * @param upgrade The upgrade to remove
-	 * @return If the upgrade was removed
+	 * @param direction The direction to remove from. This cannot be {@link EnumFacing#UP}.
+	 * @return If the upgrade was removed (if there was one).
 	 */
-	boolean removeUpgrade(INeuralUpgrade upgrade);
+	boolean removeUpgrade(EnumFacing direction);
 
 	/**
 	 * Mark this, or one of its upgrades dirty
