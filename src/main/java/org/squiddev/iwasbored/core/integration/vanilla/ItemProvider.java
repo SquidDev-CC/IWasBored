@@ -3,6 +3,7 @@ package org.squiddev.iwasbored.core.integration.vanilla;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.ILuaObject;
 import dan200.computercraft.api.lua.LuaException;
+import net.minecraft.item.ItemStack;
 import org.squiddev.iwasbored.core.api.IWasBoredCoreAPI;
 import org.squiddev.iwasbored.core.api.provider.AbstractProvider;
 import org.squiddev.iwasbored.core.api.reference.IInventorySlot;
@@ -35,7 +36,7 @@ public class ItemProvider extends AbstractProvider<IReference<IInventorySlot>, I
 		public Object[] callMethod(ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
 			switch (method) {
 				case 0:
-					return new Object[]{IWasBoredCoreAPI.instance().getItemMetadata(item.get().stack())};
+					return new Object[]{IWasBoredCoreAPI.instance().getMetadata(item.get().stack(), ItemStack.class)};
 			}
 			return null;
 		}

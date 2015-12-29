@@ -2,6 +2,7 @@ package org.squiddev.iwasbored.core.integration.vanilla;
 
 import dan200.computercraft.api.lua.ILuaObject;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import org.squiddev.iwasbored.core.api.IIWasBoredCoreAPI;
 import org.squiddev.iwasbored.core.api.IWasBoredCoreAPI;
 import org.squiddev.iwasbored.core.api.provider.AbstractProvider;
@@ -18,12 +19,13 @@ public class VanillaIntegration extends Module {
 		registry.registerMethodProvider(new ItemProvider(), IInventorySlot.class);
 		registry.registerMethodProvider(new ItemProviderConsumable(), IInventorySlot.class);
 
-		registry.registerItemMetadata(new ItemMetaProviderBasic());
-		registry.registerItemMetadata(new ItemMetaProviderConsumable());
-		registry.registerItemMetadata(new ItemMetaProviderMaterial());
-		registry.registerItemMetadata(new ItemMetaProviderHarvestLevel());
-		registry.registerItemMetadata(new ItemMetaProviderEnchantment());
-		registry.registerItemMetadata(new ItemMetaProviderOreDict());
+		// Item metadata providers
+		registry.registerMetadataProvider(new ItemMetaProviderBasic(), ItemStack.class);
+		registry.registerMetadataProvider(new ItemMetaProviderConsumable(), ItemStack.class);
+		registry.registerMetadataProvider(new ItemMetaProviderMaterial(), ItemStack.class);
+		registry.registerMetadataProvider(new ItemMetaProviderHarvestLevel(), ItemStack.class);
+		registry.registerMetadataProvider(new ItemMetaProviderEnchantment(), ItemStack.class);
+		registry.registerMetadataProvider(new ItemMetaProviderOreDict(), ItemStack.class);
 
 		// Inventory providers
 		registry.registerMethodProvider(new AbstractProvider<IReference<IInventory>, ILuaObject>() {

@@ -2,10 +2,10 @@ package org.squiddev.iwasbored.core;
 
 import com.google.common.base.Preconditions;
 import dan200.computercraft.api.lua.ILuaObject;
-import net.minecraft.item.ItemStack;
 import org.squiddev.iwasbored.core.api.IIWasBoredCoreAPI;
 import org.squiddev.iwasbored.core.api.provider.IProvider;
 import org.squiddev.iwasbored.core.api.reference.IReference;
+import org.squiddev.iwasbored.lib.SortedClassLookup;
 import org.squiddev.iwasbored.lib.SortedCollection;
 
 import java.util.*;
@@ -18,24 +18,27 @@ public class CoreAPI implements IIWasBoredCoreAPI {
 		}
 	};
 
-	private final SortedCollection<IProvider<ItemStack, Map<String, Object>>> metaProviders = new SortedCollection<IProvider<ItemStack, Map<String, Object>>>(providerComparer);
-
-	private final HashMap<Class<?>, SortedCollection<IProvider>> targetedProviders = new HashMap<Class<?>, SortedCollection<IProvider>>();
+	private final SortedClassLookup<IProvider> metaProviders = new SortedClassLookup<IProvider>(providerComparer);
+	private final SortedClassLookup<IProvider> targetedProviders = new SortedClassLookup<IProvider>(providerComparer);
 
 	@Override
-	public void registerItemMetadata(IProvider<ItemStack, Map<String, Object>> provider) {
+	public <T> void registerMetadataProvider(IProvider<T, Map<String, Object>> provider, Class<T> target) {
 		Preconditions.checkNotNull(provider, "provider cannot be null");
-		metaProviders.add(provider);
+		Preconditions.checkNotNull("target", "target cannot be null");
+
+		metaProviders.add(provider, target);
 	}
 
 	@Override
-	public Map<String, Object> getItemMetadata(ItemStack stack) {
+	@SuppressWarnings("unchecked")
+	public <T> Map<String, Object> getMetadata(T stack, Class<T> target) {
 		Preconditions.checkNotNull(stack, "stack cannot be null");
+		SortedCollection<IProvider> providers = metaProviders.get(target);
+		if (providers == null) return Collections.emptyMap();
 
 		Map<String, Object> data = new HashMap<String, Object>();
-
-		for (IProvider<ItemStack, Map<String, Object>> provider : metaProviders) {
-			Map<String, Object> subData = provider.get(stack);
+		for (IProvider provider : providers) {
+			Map<String, Object> subData = (Map<String, Object>) provider.get(stack);
 			if (subData != null) data.putAll(subData);
 		}
 
@@ -47,18 +50,12 @@ public class CoreAPI implements IIWasBoredCoreAPI {
 		Preconditions.checkNotNull("provider", "provider cannot be null");
 		Preconditions.checkNotNull("target", "target cannot be null");
 
-		SortedCollection<IProvider> providers = targetedProviders.get(target);
-		if (providers == null) {
-			providers = new SortedCollection<IProvider>(providerComparer);
-			targetedProviders.put(target, providers);
-		}
-
-		providers.add(provider);
+		metaProviders.add(provider, target);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> Iterable<ILuaObject> getObjectMethods(IReference<T> object, Class<T> target) {
+	public <T> Iterable<ILuaObject> getMethods(IReference<T> object, Class<T> target) {
 		Preconditions.checkNotNull(object, "object cannot be null");
 		Preconditions.checkNotNull(object, "target cannot be null");
 

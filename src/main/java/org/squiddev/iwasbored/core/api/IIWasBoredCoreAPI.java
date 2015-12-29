@@ -1,28 +1,38 @@
 package org.squiddev.iwasbored.core.api;
 
 import dan200.computercraft.api.lua.ILuaObject;
-import net.minecraft.item.ItemStack;
 import org.squiddev.iwasbored.core.api.provider.IProvider;
-import org.squiddev.iwasbored.core.api.reference.IReference;
 import org.squiddev.iwasbored.core.api.reference.IInventorySlot;
+import org.squiddev.iwasbored.core.api.reference.IReference;
 
 import java.util.Map;
 
 public interface IIWasBoredCoreAPI {
 	/**
-	 * Register a provider for item metadata
+	 * Register a provider for metadata.
 	 *
+	 * This can be any object, but some common ones include:
+	 * - {@link net.minecraft.item.ItemStack}
+	 * - {@link net.minecraft.entity.Entity}
+	 * - {@link net.minecraftforge.fluids.FluidStack}
+	 * - {@link net.minecraft.tileentity.TileEntity}
+	 * - {@link net.minecraft.block.state.BlockState}
+	 *
+	 * @param target   The class/interface this provider targets.
 	 * @param provider The provider
+	 * @see #getMetadata(Object, Class)
 	 */
-	void registerItemMetadata(IProvider<ItemStack, Map<String, Object>> provider);
+	<T> void registerMetadataProvider(IProvider<T, Map<String, Object>> provider, Class<T> target);
 
 	/**
-	 * Get all metadata for an item
+	 * Get all metadata for an object.
 	 *
-	 * @param stack The item to provide metadata for
-	 * @return The metadata for the item
+	 * @param object The object to provide metadata for.
+	 * @param target The target class/interface.
+	 * @return The metadata for the object
+	 * @see #registerMetadataProvider(IProvider, Class)
 	 */
-	Map<String, Object> getItemMetadata(ItemStack stack);
+	<T> Map<String, Object> getMetadata(T object, Class<T> target);
 
 	/**
 	 * Add a method provider for an object.
@@ -36,17 +46,19 @@ public interface IIWasBoredCoreAPI {
 	 * For items though you should register with {@link IInventorySlot}.
 	 *
 	 * @param provider The provider
-	 * @param target   The class this provider targets. This can be an interface.
+	 * @param target   The class/interface this provider targets.
 	 * @param <T>      The type this provider targets
+	 * @see #getMethods(IReference, Class)
 	 */
 	<T> void registerMethodProvider(IProvider<IReference<T>, ILuaObject> provider, Class<T> target);
 
 	/**
-	 * Get all methods for an object
+	 * Get all methods for an object.
 	 *
-	 * @param object The object to provide methods for
-	 * @param target The target class. This should be faster than the above method, an resolves interface ambiguities.
+	 * @param object The object to provide methods for.
+	 * @param target The target class/interface.
 	 * @return All methods provided
+	 * @see #registerMethodProvider(IProvider, Class)
 	 */
-	<T> Iterable<ILuaObject> getObjectMethods(IReference<T> object, Class<T> target);
+	<T> Iterable<ILuaObject> getMethods(IReference<T> object, Class<T> target);
 }

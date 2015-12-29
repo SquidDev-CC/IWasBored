@@ -1,5 +1,6 @@
 package org.squiddev.iwasbored.core.integration.computercraft;
 
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Optional;
 import org.squiddev.iwasbored.core.api.IIWasBoredCoreAPI;
 import org.squiddev.iwasbored.core.api.IWasBoredCoreAPI;
@@ -15,6 +16,6 @@ public class ComputerCraftIntegration extends IntegrationModule {
 	public void init() {
 		IIWasBoredCoreAPI registry = IWasBoredCoreAPI.instance();
 
-		registry.registerItemMetadata(new ComputerItemMetaProvider());
+		registry.registerMetadataProvider(new ComputerItemMetaProvider(), ItemStack.class);
 	}
 }

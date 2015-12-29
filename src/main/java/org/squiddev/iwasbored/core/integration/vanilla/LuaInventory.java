@@ -76,7 +76,7 @@ public class LuaInventory implements ILuaObject {
 					return new Object[]{false, "No item there"};
 				} else {
 					return new Object[]{
-						new LuaReference<IInventorySlot>(IWasBoredCoreAPI.instance().getObjectMethods(item, IInventorySlot.class), item, "Item is no longer there")
+						new LuaReference<IInventorySlot>(IWasBoredCoreAPI.instance().getMethods(item, IInventorySlot.class), item, "Item is no longer there")
 					};
 				}
 			}
@@ -89,7 +89,7 @@ public class LuaInventory implements ILuaObject {
 				if (stack == null) {
 					return new Object[]{false, "No item there"};
 				} else {
-					return new Object[]{IWasBoredCoreAPI.instance().getItemMetadata(stack)};
+					return new Object[]{IWasBoredCoreAPI.instance().getMetadata(stack, ItemStack.class)};
 				}
 			}
 

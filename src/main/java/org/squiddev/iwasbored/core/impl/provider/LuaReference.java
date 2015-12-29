@@ -26,11 +26,11 @@ public class LuaReference<T> extends LuaObjectCollection {
 	}
 
 	public LuaReference(IReference<T> reference, Class<T> target) {
-		this(registry.getObjectMethods(reference, target), reference);
+		this(registry.getMethods(reference, target), reference);
 	}
 
 	public LuaReference(IReference<T> reference, Class<T> target, String message) {
-		this(registry.getObjectMethods(reference, target), reference, message);
+		this(registry.getMethods(reference, target), reference, message);
 	}
 
 	@Override
