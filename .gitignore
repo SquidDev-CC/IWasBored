@@ -64,6 +64,7 @@ $RECYCLE.BIN/
 # =========================
 /.gradle
 /build/
+/classes/
 /run/
 !gradle/wrapper/gradle-wrapper.jar
 
