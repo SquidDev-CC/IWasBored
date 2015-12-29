@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * Provider for computer items;
  */
-public class ComputerItemMetaProvider extends NamespacedMetaProvider<ItemStack> {
+public class ItemMetaProviderComputer extends NamespacedMetaProvider<ItemStack> {
 	@Override
 	public String getNamespace() {
 		return "computer";

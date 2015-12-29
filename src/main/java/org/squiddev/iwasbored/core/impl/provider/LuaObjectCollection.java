@@ -7,6 +7,7 @@ import net.minecraftforge.fml.common.Optional;
 import org.squiddev.cctweaks.api.lua.ArgumentDelegator;
 import org.squiddev.cctweaks.api.lua.IArguments;
 import org.squiddev.cctweaks.api.lua.ILuaObjectWithArguments;
+import org.squiddev.iwasbored.lib.DebugLogger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +57,12 @@ public class LuaObjectCollection implements ILuaObject, ILuaObjectWithArguments 
 		if (method >= wrappers.length) return null;
 
 		ObjectWrapper wrapper = wrappers[method];
-		return wrapper.object.callMethod(context, wrapper.index, objects);
+		try {
+			return wrapper.object.callMethod(context, wrapper.index, objects);
+		} catch (RuntimeException e) {
+			DebugLogger.debug("Error calling method", e);
+			throw e;
+		}
 	}
 
 	@Override
@@ -65,6 +71,11 @@ public class LuaObjectCollection implements ILuaObject, ILuaObjectWithArguments 
 		if (method >= wrappers.length) return null;
 
 		ObjectWrapper wrapper = wrappers[method];
-		return ArgumentDelegator.delegateLuaObject(wrapper.object, context, wrapper.index, arguments);
+		try {
+			return ArgumentDelegator.delegateLuaObject(wrapper.object, context, wrapper.index, arguments);
+		} catch (RuntimeException e) {
+			DebugLogger.debug("Error calling method", e);
+			throw e;
+		}
 	}
 }

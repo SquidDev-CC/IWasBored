@@ -40,27 +40,28 @@ public class ItemMetaProviderConsumable extends AbstractProvider<ItemStack, Map<
 
 			@SuppressWarnings("unchecked")
 			List<PotionEffect> effects = itemPotion.getEffects(stack);
+			if (effects != null && effects.size() > 0) {
+				int i = 0;
+				for (PotionEffect effect : effects) {
+					Map<String, Object> entry = Maps.newHashMap();
 
-			int i = 0;
-			for (PotionEffect effect : effects) {
-				Map<String, Object> entry = Maps.newHashMap();
+					entry.put("duration", effect.getDuration() / 20); // ticks!
+					entry.put("amplifier", effect.getAmplifier());
+					int potionId = effect.getPotionID();
+					if (potionId >= 0 && potionId < Potion.potionTypes.length) {
 
-				entry.put("duration", effect.getDuration() / 20); // ticks!
-				entry.put("amplifier", effect.getAmplifier());
-				int potionId = effect.getPotionID();
-				if (potionId >= 0 && potionId < Potion.potionTypes.length) {
+						Potion potion = Potion.potionTypes[potionId];
+						data.put("name", potion.getName());
+						data.put("instant", potion.isInstant());
+						data.put("color", potion.getLiquidColor());
+					}
 
-					Potion potion = Potion.potionTypes[potionId];
-					data.put("name", potion.getName());
-					data.put("instant", potion.isInstant());
-					data.put("color", potion.getLiquidColor());
+					effectsInfo.put(i, entry);
+					i++;
 				}
 
-				effectsInfo.put(i, entry);
-				i++;
+				data.put("effects", effectsInfo);
 			}
-
-			data.put("effects", effectsInfo);
 
 			return data;
 		} else {

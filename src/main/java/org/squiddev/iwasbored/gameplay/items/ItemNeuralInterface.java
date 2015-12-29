@@ -21,7 +21,6 @@ import org.squiddev.iwasbored.gameplay.client.model.ModelInterface;
 import org.squiddev.iwasbored.gameplay.neural.NeuralInterface;
 import org.squiddev.iwasbored.gameplay.neural.NeuralManager;
 import org.squiddev.iwasbored.gameplay.utils.Helpers;
-import org.squiddev.iwasbored.lib.DebugLogger;
 import org.squiddev.iwasbored.lib.registry.IClientModule;
 
 @Optional.Interface(iface = "baubles.api.IBauble", modid = "Baubles")
@@ -110,7 +109,6 @@ public class ItemNeuralInterface extends ItemArmor implements IBauble, ISpecialA
 
 	@Override
 	public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, int armorSlot) {
-		DebugLogger.debug("Slot is %s", armorSlot);
 		return ModelInterface.get();
 	}
 

@@ -46,7 +46,7 @@ public class LuaInventory implements ILuaObject {
 		return new String[]{
 			"list",
 			"getItem",
-			"getItemMetadata",
+			"getMetadata",
 			"getSize"
 		};
 	}
@@ -85,7 +85,7 @@ public class LuaInventory implements ILuaObject {
 				int slot = ((Number) args[0]).intValue();
 				if (slot < 1 || slot > size) throw new LuaException("Slot out of range");
 
-				ItemStack stack = inventory.get().getStackInSlot(slot + offset);
+				ItemStack stack = inventory.get().getStackInSlot(offset + slot - 1);
 				if (stack == null) {
 					return new Object[]{false, "No item there"};
 				} else {

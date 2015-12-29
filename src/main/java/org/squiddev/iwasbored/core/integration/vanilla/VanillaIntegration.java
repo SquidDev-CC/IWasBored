@@ -3,6 +3,7 @@ package org.squiddev.iwasbored.core.integration.vanilla;
 import dan200.computercraft.api.lua.ILuaObject;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import org.squiddev.iwasbored.core.api.IIWasBoredCoreAPI;
 import org.squiddev.iwasbored.core.api.IWasBoredCoreAPI;
 import org.squiddev.iwasbored.core.api.provider.AbstractProvider;
@@ -26,6 +27,11 @@ public class VanillaIntegration extends Module {
 		registry.registerMetadataProvider(new ItemMetaProviderHarvestLevel(), ItemStack.class);
 		registry.registerMetadataProvider(new ItemMetaProviderEnchantment(), ItemStack.class);
 		registry.registerMetadataProvider(new ItemMetaProviderOreDict(), ItemStack.class);
+		registry.registerMetadataProvider(new ItemMetaProviderFluidContainer(), ItemStack.class);
+		registry.registerMetadataProvider(new ItemMetaProviderArmor(), ItemStack.class);
+
+		// Fluid stack
+		registry.registerMetadataProvider(new FluidMetaProviderBasic(), FluidStack.class);
 
 		// Inventory providers
 		registry.registerMethodProvider(new AbstractProvider<IReference<IInventory>, ILuaObject>() {

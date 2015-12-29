@@ -19,7 +19,7 @@ public class CoreAPI implements IIWasBoredCoreAPI {
 	};
 
 	private final SortedClassLookup<IProvider> metaProviders = new SortedClassLookup<IProvider>(providerComparer);
-	private final SortedClassLookup<IProvider> targetedProviders = new SortedClassLookup<IProvider>(providerComparer);
+	private final SortedClassLookup<IProvider> methodProviders = new SortedClassLookup<IProvider>(providerComparer);
 
 	@Override
 	public <T> void registerMetadataProvider(IProvider<T, Map<String, Object>> provider, Class<T> target) {
@@ -50,7 +50,7 @@ public class CoreAPI implements IIWasBoredCoreAPI {
 		Preconditions.checkNotNull("provider", "provider cannot be null");
 		Preconditions.checkNotNull("target", "target cannot be null");
 
-		metaProviders.add(provider, target);
+		methodProviders.add(provider, target);
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class CoreAPI implements IIWasBoredCoreAPI {
 		Preconditions.checkNotNull(object, "object cannot be null");
 		Preconditions.checkNotNull(object, "target cannot be null");
 
-		SortedCollection<IProvider> providers = targetedProviders.get(target);
+		SortedCollection<IProvider> providers = methodProviders.get(target);
 		if (providers == null) return Collections.emptyList();
 
 		List<ILuaObject> objects = new ArrayList<ILuaObject>();

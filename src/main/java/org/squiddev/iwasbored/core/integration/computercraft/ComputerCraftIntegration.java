@@ -16,6 +16,6 @@ public class ComputerCraftIntegration extends IntegrationModule {
 	public void init() {
 		IIWasBoredCoreAPI registry = IWasBoredCoreAPI.instance();
 
-		registry.registerMetadataProvider(new ComputerItemMetaProvider(), ItemStack.class);
+		registry.registerMetadataProvider(new ItemMetaProviderComputer(), ItemStack.class);
 	}
 }

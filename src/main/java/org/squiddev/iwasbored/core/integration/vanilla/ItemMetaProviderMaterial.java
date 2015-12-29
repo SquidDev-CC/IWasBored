@@ -1,9 +1,6 @@
 package org.squiddev.iwasbored.core.integration.vanilla;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemSword;
-import net.minecraft.item.ItemTool;
+import net.minecraft.item.*;
 import org.squiddev.iwasbored.core.api.provider.NamespacedMetaProvider;
 
 /**
@@ -22,6 +19,8 @@ public class ItemMetaProviderMaterial extends NamespacedMetaProvider<ItemStack> 
 			return ((ItemTool) item).getToolMaterialName();
 		} else if (item instanceof ItemSword) {
 			return ((ItemSword) item).getToolMaterialName();
+		} else if (item instanceof ItemArmor) {
+			return ((ItemArmor) item).getArmorMaterial().toString();
 		} else {
 			return null;
 		}

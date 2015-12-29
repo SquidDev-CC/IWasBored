@@ -15,13 +15,13 @@ public class SortedClassLookup<T> {
 	}
 
 	public void add(T provider, Class<?> target) {
-		SortedCollection<T> providers = items.get(target);
-		if (providers == null) {
-			providers = new SortedCollection<T>(comparator);
-			items.put(target, providers);
+		SortedCollection<T> targetItems = items.get(target);
+		if (targetItems == null) {
+			targetItems = new SortedCollection<T>(comparator);
+			items.put(target, targetItems);
 		}
 
-		providers.add(provider);
+		targetItems.add(provider);
 	}
 
 	public SortedCollection<T> get(Class<?> target) {
