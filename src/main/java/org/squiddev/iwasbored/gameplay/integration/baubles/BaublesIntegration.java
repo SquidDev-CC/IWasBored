@@ -12,7 +12,7 @@ public class BaublesIntegration extends IntegrationModule {
 
 	@Override
 	@Optional.Method(modid = "Baubles")
-	public void postInit() {
+	public void init() {
 		INeuralRegistry registry = IWasBoredGameplayAPI.instance().neuralRegistry();
 
 		registry.registerNeuralProvider(new BaublesNeuralProvider());

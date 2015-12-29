@@ -3,6 +3,10 @@ package org.squiddev.iwasbored.core.impl.provider;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.ILuaObject;
 import dan200.computercraft.api.lua.LuaException;
+import net.minecraftforge.fml.common.Optional;
+import org.squiddev.cctweaks.api.lua.ArgumentDelegator;
+import org.squiddev.cctweaks.api.lua.IArguments;
+import org.squiddev.cctweaks.api.lua.ILuaObjectWithArguments;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,18 +14,15 @@ import java.util.List;
 /**
  * Collection of Lua objects
  */
-public class LuaObjectCollection implements ILuaObject {
+@Optional.Interface(iface = "org.squiddev.cctweaks.api.lua.ILuaObjectWithArguments", modid = "CCTweaks")
+public class LuaObjectCollection implements ILuaObject, ILuaObjectWithArguments {
 	private final class ObjectWrapper {
-		private final ILuaObject object;
-		private final int index;
+		public final ILuaObject object;
+		public final int index;
 
-		private ObjectWrapper(ILuaObject object, int index) {
+		public ObjectWrapper(ILuaObject object, int index) {
 			this.object = object;
 			this.index = index;
-		}
-
-		public Object[] callMethod(ILuaContext context, Object[] args) throws LuaException, InterruptedException {
-			return object.callMethod(context, index, args);
 		}
 	}
 
@@ -52,6 +53,18 @@ public class LuaObjectCollection implements ILuaObject {
 
 	@Override
 	public Object[] callMethod(ILuaContext context, int method, Object[] objects) throws LuaException, InterruptedException {
-		return method < wrappers.length ? wrappers[method].callMethod(context, objects) : null;
+		if (method >= wrappers.length) return null;
+
+		ObjectWrapper wrapper = wrappers[method];
+		return wrapper.object.callMethod(context, wrapper.index, objects);
+	}
+
+	@Override
+	@Optional.Method(modid = "CCTweaks")
+	public Object[] callMethod(ILuaContext context, int method, IArguments arguments) throws LuaException, InterruptedException {
+		if (method >= wrappers.length) return null;
+
+		ObjectWrapper wrapper = wrappers[method];
+		return ArgumentDelegator.delegateLuaObject(wrapper.object, context, wrapper.index, arguments);
 	}
 }

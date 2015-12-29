@@ -5,18 +5,22 @@ import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import org.squiddev.iwasbored.core.api.provider.AbstractProvider;
+import org.squiddev.iwasbored.core.api.provider.NamespacedMetaProvider;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Lists enchantments on items
  */
-public class ItemMetaProviderEnchantment extends AbstractProvider<ItemStack, Map<String, Object>> {
+public class ItemMetaProviderEnchantment extends NamespacedMetaProvider<ItemStack> {
 	@Override
-	public Map<String, Object> get(ItemStack stack) {
+	public String getNamespace() {
+		return "enchantments";
+	}
+
+	@Override
+	public Object getMeta(ItemStack stack) {
 		NBTTagList enchants = null;
 		if (stack.isItemEnchanted()) {
 			enchants = stack.getEnchantmentTagList();
@@ -25,9 +29,7 @@ public class ItemMetaProviderEnchantment extends AbstractProvider<ItemStack, Map
 		}
 
 		if (enchants != null && enchants.tagCount() > 0) {
-			Map<String, Object> result = new HashMap<String, Object>();
 			Map<Integer, Object> items = new HashMap<Integer, Object>();
-			result.put("enchantments", items);
 
 			for (int i = 0; i < enchants.tagCount(); i++) {
 				NBTTagCompound tag = enchants.getCompoundTagAt(i);
@@ -44,9 +46,9 @@ public class ItemMetaProviderEnchantment extends AbstractProvider<ItemStack, Map
 				}
 			}
 
-			return result;
+			return items;
 		} else {
-			return Collections.emptyMap();
+			return null;
 		}
 	}
 }

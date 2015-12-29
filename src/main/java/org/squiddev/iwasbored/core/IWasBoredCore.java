@@ -4,6 +4,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import org.squiddev.iwasbored.core.integration.computercraft.ComputerCraftIntegration;
 import org.squiddev.iwasbored.core.integration.vanilla.VanillaIntegration;
 import org.squiddev.iwasbored.lib.registry.Registry;
 
@@ -18,8 +19,8 @@ public class IWasBoredCore {
 	private final Registry registry = new Registry();
 
 	public void setupRegistry() {
-		// Core
 		registry.addModule(new VanillaIntegration());
+		registry.addModule(new ComputerCraftIntegration());
 	}
 
 	@Mod.EventHandler

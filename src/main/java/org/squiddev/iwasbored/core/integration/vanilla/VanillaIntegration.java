@@ -11,7 +11,7 @@ import org.squiddev.iwasbored.lib.registry.Module;
 
 public class VanillaIntegration extends Module {
 	@Override
-	public void preInit() {
+	public void init() {
 		IIWasBoredCoreAPI registry = IWasBoredCoreAPI.instance();
 
 		// Item providers
