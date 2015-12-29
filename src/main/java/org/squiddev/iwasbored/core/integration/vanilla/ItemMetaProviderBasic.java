@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * Adds basic properties for item stacks.
  */
-public class BasicStackMetaProvider extends AbstractProvider<ItemStack, Map<String, Object>> {
+public class ItemMetaProviderBasic extends AbstractProvider<ItemStack, Map<String, Object>> {
 	@Override
 	public Map<String, Object> get(ItemStack stack) {
 		Map<String, Object> data = InventoryUtils.getBasicProperties(stack);

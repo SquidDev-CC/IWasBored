@@ -9,6 +9,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import org.squiddev.iwasbored.core.api.provider.AbstractProvider;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,17 +19,19 @@ import java.util.Map;
  *
  * Provides food and saturation for foodstuffs, and potion details for potions.
  */
-public class ConsumableStackMetaProvider extends AbstractProvider<ItemStack, Map<String, Object>> {
+public class ItemMetaProviderConsumable extends AbstractProvider<ItemStack, Map<String, Object>> {
 	@Override
 	public Map<String, Object> get(ItemStack stack) {
 		Item item = stack.getItem();
-		Map<String, Object> data = new HashMap<String, Object>();
-
 		if (item instanceof ItemFood) {
+			Map<String, Object> data = new HashMap<String, Object>();
 			ItemFood food = (ItemFood) item;
 			data.put("heal", food.getHealAmount(stack));
 			data.put("saturation", food.getSaturationModifier(stack));
+
+			return data;
 		} else if (item instanceof ItemPotion) {
+			Map<String, Object> data = new HashMap<String, Object>();
 			ItemPotion itemPotion = (ItemPotion) item;
 
 			data.put("splash", ItemPotion.isSplash(stack.getItemDamage()));
@@ -58,8 +61,10 @@ public class ConsumableStackMetaProvider extends AbstractProvider<ItemStack, Map
 			}
 
 			data.put("effects", effectsInfo);
-		}
 
-		return data;
+			return data;
+		} else {
+			return Collections.emptyMap();
+		}
 	}
 }

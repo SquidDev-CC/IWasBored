@@ -15,7 +15,7 @@ import org.squiddev.iwasbored.core.api.reference.IReference;
  *
  * This enables consuming it: Eating/Drinking it
  */
-public class ConsumableStackProvider extends AbstractProvider<IReference<IInventorySlot>, ILuaObject> {
+public class ItemProviderConsumable extends AbstractProvider<IReference<IInventorySlot>, ILuaObject> {
 	@Override
 	public ILuaObject get(IReference<IInventorySlot> reference) {
 		ItemStack stack = reference.get().stack();

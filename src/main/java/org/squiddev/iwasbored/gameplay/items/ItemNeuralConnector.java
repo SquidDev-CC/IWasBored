@@ -1,15 +1,15 @@
 package org.squiddev.iwasbored.gameplay.items;
 
-import org.squiddev.iwasbored.gameplay.GuiHandler;
-import org.squiddev.iwasbored.gameplay.IWasBoredGameplay;
-import org.squiddev.iwasbored.gameplay.utils.Helpers;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import org.squiddev.iwasbored.gameplay.GuiHandler;
+import org.squiddev.iwasbored.gameplay.IWasBoredGameplay;
 import org.squiddev.iwasbored.gameplay.api.IWasBoredGameplayAPI;
 import org.squiddev.iwasbored.gameplay.api.neural.INeuralReference;
+import org.squiddev.iwasbored.gameplay.utils.Helpers;
 import org.squiddev.iwasbored.lib.registry.IClientModule;
 
 
@@ -17,8 +17,9 @@ public class ItemNeuralConnector extends Item implements IClientModule {
 	private static final String NAME = "neuralConnector";
 
 	public ItemNeuralConnector() {
-		this.setUnlocalizedName(IWasBoredGameplay.RESOURCE_DOMAIN + "." + NAME);
-		this.setCreativeTab(IWasBoredGameplay.getCreativeTab());
+		setMaxStackSize(1);
+		setUnlocalizedName(IWasBoredGameplay.RESOURCE_DOMAIN + "." + NAME);
+		setCreativeTab(IWasBoredGameplay.getCreativeTab());
 	}
 
 	@Override

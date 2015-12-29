@@ -1,7 +1,6 @@
 package org.squiddev.iwasbored.gameplay;
 
 import dan200.computercraft.ComputerCraft;
-import org.squiddev.iwasbored.gameplay.integration.baubles.BaublesIntegration;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -10,6 +9,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import org.squiddev.iwasbored.gameplay.client.render.RenderModelInterface;
+import org.squiddev.iwasbored.gameplay.integration.baubles.BaublesIntegration;
 import org.squiddev.iwasbored.gameplay.integration.vanilla.VanillaIntegration;
 import org.squiddev.iwasbored.gameplay.items.ItemNeuralConnector;
 import org.squiddev.iwasbored.gameplay.items.ItemNeuralInterface;
@@ -37,7 +37,7 @@ public class IWasBoredGameplay {
 		public static ItemNeuralConnector itemNeuralConnector;
 	}
 
-	public IWasBoredGameplay() {
+	public void setupRegistry() {
 		registry.addModule(Items.itemNeuralInterface = new ItemNeuralInterface());
 		registry.addModule(Items.itemNeuralConnector = new ItemNeuralConnector());
 
@@ -48,6 +48,7 @@ public class IWasBoredGameplay {
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		setupRegistry();
 		FMLCommonHandler.instance().bus().register(new FmlEvents());
 		registry.preInit();
 	}

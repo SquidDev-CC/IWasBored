@@ -11,7 +11,7 @@ import org.squiddev.iwasbored.core.api.reference.IReference;
 /**
  * Provides a method to get metadata for an item
  */
-public class BasicStackProvider extends AbstractProvider<IReference<IInventorySlot>, ILuaObject> {
+public class ItemProvider extends AbstractProvider<IReference<IInventorySlot>, ILuaObject> {
 	@Override
 	public ILuaObject get(IReference<IInventorySlot> reference) {
 		return new BasicObject(reference);

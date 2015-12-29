@@ -46,6 +46,7 @@ public class LuaInventory implements ILuaObject {
 		return new String[]{
 			"list",
 			"getItem",
+			"getItemMetadata",
 			"getSize"
 		};
 	}
@@ -70,19 +71,35 @@ public class LuaInventory implements ILuaObject {
 				int slot = ((Number) args[0]).intValue();
 				if (slot < 1 || slot > size) throw new LuaException("Slot out of range");
 
-				SlotReference item = new SlotReference(inventory, slot - 1);
-				return new Object[]{
-					new LuaReference<IInventorySlot>(IWasBoredCoreAPI.instance().getObjectMethods(item, IInventorySlot.class), item, "Item is no longer there")
-				};
+				SlotReference item = new SlotReference(inventory, offset + slot - 1);
+				if (item.get() == null) {
+					return new Object[]{false, "No item there"};
+				} else {
+					return new Object[]{
+						new LuaReference<IInventorySlot>(IWasBoredCoreAPI.instance().getObjectMethods(item, IInventorySlot.class), item, "Item is no longer there")
+					};
+				}
+			}
+			case 2: {
+				if (args.length < 1 || !(args[0] instanceof Number)) throw new LuaException("Expected number");
+				int slot = ((Number) args[0]).intValue();
+				if (slot < 1 || slot > size) throw new LuaException("Slot out of range");
+
+				ItemStack stack = inventory.get().getStackInSlot(slot + offset);
+				if (stack == null) {
+					return new Object[]{false, "No item there"};
+				} else {
+					return new Object[]{IWasBoredCoreAPI.instance().getItemMetadata(stack)};
+				}
 			}
 
-			case 2: // getSize
+			case 3: // getSize
 				return new Object[]{size};
-			case 3: { // moveToSlot
+			case 4: { // moveToSlot
 				// (fromSlot, targetSlot, [Count])
 				break;
 			}
-			case 4: { // moveToInventory
+			case 5: { // moveToInventory
 				// (fromSlot, targetSlot, targetInventory, [Count])
 				break;
 			}

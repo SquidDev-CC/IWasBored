@@ -17,13 +17,14 @@ public class IWasBoredCore {
 
 	private final Registry registry = new Registry();
 
-	public IWasBoredCore() {
+	public void setupRegistry() {
 		// Core
 		registry.addModule(new VanillaIntegration());
 	}
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		setupRegistry();
 		registry.preInit();
 	}
 

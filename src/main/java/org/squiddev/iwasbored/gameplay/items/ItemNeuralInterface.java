@@ -2,11 +2,6 @@ package org.squiddev.iwasbored.gameplay.items;
 
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
-import org.squiddev.iwasbored.gameplay.IWasBoredGameplay;
-import org.squiddev.iwasbored.gameplay.client.model.ModelInterface;
-import org.squiddev.iwasbored.gameplay.neural.NeuralInterface;
-import org.squiddev.iwasbored.gameplay.neural.NeuralManager;
-import org.squiddev.iwasbored.gameplay.utils.Helpers;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -21,6 +16,12 @@ import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import org.squiddev.iwasbored.gameplay.IWasBoredGameplay;
+import org.squiddev.iwasbored.gameplay.client.model.ModelInterface;
+import org.squiddev.iwasbored.gameplay.neural.NeuralInterface;
+import org.squiddev.iwasbored.gameplay.neural.NeuralManager;
+import org.squiddev.iwasbored.gameplay.utils.Helpers;
+import org.squiddev.iwasbored.lib.DebugLogger;
 import org.squiddev.iwasbored.lib.registry.IClientModule;
 
 @Optional.Interface(iface = "baubles.api.IBauble", modid = "Baubles")
@@ -29,13 +30,13 @@ public class ItemNeuralInterface extends ItemArmor implements IBauble, ISpecialA
 	private static final ArmorProperties FAKE_PROPERTIES = new ArmorProperties(0, 0, 0);
 	private static final String NAME = "neuralInterface";
 
-	public static final String RESOURCE_PATH = IWasBoredGameplay.PREFIX_TEXTURES + "items/neuralInterface.png";
-	public static final ResourceLocation RESOURCE_LOCATION = new ResourceLocation(IWasBoredGameplay.RESOURCE_DOMAIN, "textures/items/neuralInterface.png");
+	public static final String RESOURCE_PATH = IWasBoredGameplay.PREFIX_TEXTURES + "model/neuralInterface.png";
+	public static final ResourceLocation RESOURCE_LOCATION = new ResourceLocation(IWasBoredGameplay.RESOURCE_DOMAIN, "textures/model/neuralInterface.png");
 
 	public ItemNeuralInterface() {
 		super(FAKE_ARMOUR, 0, 0);
-		this.setUnlocalizedName(IWasBoredGameplay.RESOURCE_DOMAIN + "." + NAME);
-		this.setCreativeTab(IWasBoredGameplay.getCreativeTab());
+		setUnlocalizedName(IWasBoredGameplay.RESOURCE_DOMAIN + "." + NAME);
+		setCreativeTab(IWasBoredGameplay.getCreativeTab());
 	}
 
 	//region IBauble
@@ -109,8 +110,8 @@ public class ItemNeuralInterface extends ItemArmor implements IBauble, ISpecialA
 
 	@Override
 	public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, int armorSlot) {
-		if (armorSlot == 0) return ModelInterface.get();
-		return super.getArmorModel(entityLiving, itemStack, armorSlot);
+		DebugLogger.debug("Slot is %s", armorSlot);
+		return ModelInterface.get();
 	}
 
 

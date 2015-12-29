@@ -15,11 +15,15 @@ public class VanillaIntegration extends Module {
 		IIWasBoredCoreAPI registry = IWasBoredCoreAPI.instance();
 
 		// Item providers
-		registry.registerMethodProvider(new BasicStackProvider(), IInventorySlot.class);
-		registry.registerMethodProvider(new ConsumableStackProvider(), IInventorySlot.class);
+		registry.registerMethodProvider(new ItemProvider(), IInventorySlot.class);
+		registry.registerMethodProvider(new ItemProviderConsumable(), IInventorySlot.class);
 
-		registry.registerItemMetadata(new BasicStackMetaProvider());
-		registry.registerItemMetadata(new ConsumableStackMetaProvider());
+		registry.registerItemMetadata(new ItemMetaProviderBasic());
+		registry.registerItemMetadata(new ItemMetaProviderConsumable());
+		registry.registerItemMetadata(new ItemMetaProviderMaterial());
+		registry.registerItemMetadata(new ItemMetaProviderHarvestLevel());
+		registry.registerItemMetadata(new ItemMetaProviderEnchantment());
+		registry.registerItemMetadata(new ItemMetaProviderOreDict());
 
 		// Inventory providers
 		registry.registerMethodProvider(new AbstractProvider<IReference<IInventory>, ILuaObject>() {
